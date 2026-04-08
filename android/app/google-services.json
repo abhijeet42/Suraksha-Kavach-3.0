@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "209177152281",
+    "project_id": "surakshakavach-cdc39",
+    "storage_bucket": "surakshakavach-cdc39.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209177152281:android:27351a896eb0251577d388",
+        "android_client_info": {
+          "package_name": "com.example.suraksha_kavach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209177152281-5hgh2h4t99bfg1en50o0rhe82onre09n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.suraksha_kavach",
+            "certificate_hash": "bef86c1d962a95d159f7a986bb4dcaded56229de"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB60RSsXW_5OX1aLhPN2vqUIbl13q42zZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

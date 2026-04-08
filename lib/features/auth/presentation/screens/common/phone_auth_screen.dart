@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
   final bool isAdmin;
@@ -16,8 +18,40 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   bool _isSignUp = true;
 
   @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _sendOtp() {
+    final phone = _phoneController.text.trim();
+    if (phone.isEmpty) return;
+
+    // Ensure phone number is in international format if not already
+    final formattedPhone = phone.startsWith('+') ? phone : '+91$phone';
+
+    context.read<AuthProvider>().sendOtp(
+      formattedPhone,
+      widget.isAdmin,
+      onCodeSent: (verificationId) {
+        context.push('/otp-verify', extra: {
+          'phone': formattedPhone,
+          'isAdmin': widget.isAdmin,
+          'isSignUp': _isSignUp,
+        });
+      },
+      onError: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message), backgroundColor: Colors.red),
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authProvider = context.watch<AuthProvider>();
     final title = widget.isAdmin ? "ADMIN PORTAL" : "MEMBER PORTAL";
 
     return Scaffold(
@@ -61,16 +95,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               const SizedBox(height: 32),
               
               ElevatedButton(
-                onPressed: () {
-                  if (_phoneController.text.isNotEmpty) {
-                    context.push('/otp-verify', extra: {
-                      'phone': _phoneController.text,
-                      'isAdmin': widget.isAdmin,
-                      'isSignUp': _isSignUp,
-                    });
-                  }
-                },
-                child: const Text('GET SECURE OTP'),
+                onPressed: authProvider.isLoading ? null : _sendOtp,
+                child: authProvider.isLoading 
+                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('GET SECURE OTP'),
               ),
               
               const SizedBox(height: 24),

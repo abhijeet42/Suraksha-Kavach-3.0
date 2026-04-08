@@ -4,11 +4,11 @@ import 'package:animate_do/animate_do.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import '../../../auth/providers/auth_provider.dart';
-import '../../../sms_detection/providers/sms_stream_provider.dart';
-import '../../../history/providers/sms_history_provider.dart';
-import '../../../engine_analysis/rule_based/rule_based_analyzer.dart';
-import '../../../ocr/services/ocr_service.dart';
+import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/features/sms_detection/providers/sms_stream_provider.dart';
+import 'package:suraksha_kavach/features/history/providers/sms_history_provider.dart';
+import 'package:suraksha_kavach/features/engine_analysis/rule_based/rule_based_analyzer.dart';
+import 'package:suraksha_kavach/features/ocr/services/ocr_service.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DashboardScreen extends StatelessWidget {

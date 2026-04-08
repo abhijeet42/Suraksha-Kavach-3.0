@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
-import '../../providers/auth_provider.dart';
+import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -41,7 +42,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 64),
                 ElevatedButton.icon(
-                  onPressed: () => context.read<AuthProvider>().loginAsAdmin(),
+                  onPressed: () => context.push('/admin-auth'),
                   icon: const Icon(Icons.admin_panel_settings_rounded),
                   label: const Text('LOGIN AS ADMIN', style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.w800)),
                   style: ElevatedButton.styleFrom(
@@ -50,7 +51,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
-                  onPressed: () => context.read<AuthProvider>().loginAsMember(),
+                  onPressed: () => context.push('/user-auth'),
                   icon: const Icon(Icons.person_rounded),
                   label: const Text('LOGIN AS MEMBER', style: TextStyle(letterSpacing: 1, fontWeight: FontWeight.w800)),
                   style: OutlinedButton.styleFrom(

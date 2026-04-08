@@ -3,7 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final Map<String, dynamic> authData;
@@ -40,18 +40,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     final otp = _controllers.map((c) => c.text).join();
     if (otp.length == 6) {
       final isAdmin = widget.authData['isAdmin'] as bool;
-      if (isAdmin) {
-        context.read<AuthProvider>().loginAsAdmin();
-      } else {
-        context.read<AuthProvider>().loginAsMember();
+      try {
+        await context.read<AuthProvider>().verifyOtp(otp, isAdmin);
+        context.go('/dashboard');
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+        );
       }
-      context.go('/dashboard');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authProvider = context.watch<AuthProvider>();
     final phone = widget.authData['phone'] ?? '+91 00000 00000';
 
     return Scaffold(
@@ -117,8 +120,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               const SizedBox(height: 56),
               
               ElevatedButton(
-                onPressed: _verifyOtp,
-                child: const Text('AUTHORIZE ACCESS'),
+                onPressed: authProvider.isLoading ? null : _verifyOtp,
+                child: authProvider.isLoading 
+                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('AUTHORIZE ACCESS'),
               ),
               
               const SizedBox(height: 24),

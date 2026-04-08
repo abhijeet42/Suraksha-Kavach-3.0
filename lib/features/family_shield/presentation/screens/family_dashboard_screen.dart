@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../providers/family_provider.dart';
+import 'package:suraksha_kavach/features/family_shield/providers/family_provider.dart';
 
 class FamilyDashboardScreen extends StatelessWidget {
   const FamilyDashboardScreen({super.key});

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
-import '../../../auth/providers/auth_provider.dart';
-import '../../../../core/theme/theme_provider.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/core/theme/theme_provider.dart';
+import 'package:suraksha_kavach/core/theme/app_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
