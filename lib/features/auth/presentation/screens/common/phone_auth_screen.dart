@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
   final bool isAdmin;
@@ -17,53 +18,49 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final title = widget.isAdmin ? "Admin Security Portal" : "Member Security Portal";
+    final title = widget.isAdmin ? "ADMIN PORTAL" : "MEMBER PORTAL";
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 24),
-            FadeInDown(
-              child: Text(
-                _isSignUp ? 'Create Secured Account' : 'Login to System',
-                style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 8),
-            FadeInDown(
-              delay: const Duration(milliseconds: 200),
-              child: const Text('Enter your phone number to receive a secure token.', style: TextStyle(color: Colors.grey)),
-            ),
-            const SizedBox(height: 32),
-            
-            FadeIn(
-              delay: const Duration(milliseconds: 500),
-              child: TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                style: const TextStyle(fontSize: 18, letterSpacing: 2),
-                decoration: InputDecoration(
-                  labelText: 'Phone Number',
-                  prefixIcon: const Icon(Icons.phone),
-                  hintText: '+91 00000 00000',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.primaryColor, width: 2),
-                  ),
+      body: FadeIn(
+        duration: const Duration(milliseconds: 600),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 40),
+              Text(
+                _isSignUp ? 'SECURE ACCOUNT' : 'SYSTEM LOGIN',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 24,
+                  letterSpacing: 1,
                 ),
               ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-            FadeInUp(
-              delay: const Duration(milliseconds: 800),
-              child: ElevatedButton(
+              const SizedBox(height: 12),
+              Text(
+                'Enter your phone number to receive a secure access token.',
+                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 14),
+              ),
+              const SizedBox(height: 48),
+              
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                style: const TextStyle(fontSize: 18, letterSpacing: 2, fontWeight: FontWeight.bold),
+                decoration: InputDecoration(
+                  labelText: 'PHONE NUMBER',
+                  labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1),
+                  prefixIcon: const Icon(Icons.phone_iphone_rounded),
+                  hintText: '+91 00000 00000',
+                  fillColor: theme.cardTheme.color,
+                ),
+              ),
+              
+              const SizedBox(height: 32),
+              
+              ElevatedButton(
                 onPressed: () {
                   if (_phoneController.text.isNotEmpty) {
                     context.push('/otp-verify', extra: {
@@ -73,19 +70,22 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                     });
                   }
                 },
-                child: const Text('Get Secure OTP'),
+                child: const Text('GET SECURE OTP'),
               ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            Center(
-              child: TextButton(
-                onPressed: () => setState(() => _isSignUp = !_isSignUp),
-                child: Text(_isSignUp ? 'Already have an account? Login' : 'New here? Create Admin Account'),
+              
+              const SizedBox(height: 24),
+              
+              Center(
+                child: TextButton(
+                  onPressed: () => setState(() => _isSignUp = !_isSignUp),
+                  child: Text(
+                    _isSignUp ? 'ALREADY REGISTERED? LOGIN' : 'NEW ADMIN? CREATE ACCOUNT',
+                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 0.5),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:animate_do/animate_do.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -45,9 +46,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
-        children: [
-          // Profile Banner
+      body: FadeIn(
+        duration: const Duration(milliseconds: 600),
+        child: ListView(
+          children: [
+            // Profile Banner
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
@@ -145,8 +148,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 40),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildThemeCard(BuildContext context, ThemeProvider provider, AppThemeType type, String name, Color color) {
     final isSelected = provider.currentTheme == type;

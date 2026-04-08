@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UserPairingScreen extends StatefulWidget {
   const UserPairingScreen({super.key});
@@ -31,11 +32,13 @@ class _UserPairingScreenState extends State<UserPairingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (_isScanning) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Scan Admin QR'),
-          leading: IconButton(icon: const Icon(Icons.close), onPressed: () => setState(() => _isScanning = false)),
+          title: const Text('SCAN ADMIN QR'),
+          leading: IconButton(icon: const Icon(Icons.close_rounded), onPressed: () => setState(() => _isScanning = false)),
         ),
         body: MobileScanner(
           onDetect: _onScanSuccess,
@@ -44,59 +47,62 @@ class _UserPairingScreenState extends State<UserPairingScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Family Shield Pairing')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 24),
-            FadeInDown(
-              child: const Icon(Icons.qr_code_scanner, size: 100, color: Colors.blueAccent),
-            ),
-            const SizedBox(height: 24),
-            FadeInDown(
-              delay: const Duration(milliseconds: 300),
-              child: const Text('Pair Your Device', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 12),
-            FadeInDown(
-              delay: const Duration(milliseconds: 500),
-              child: const Text(
-                'Join a family group to enable shared threat intelligence and admin protection.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
+      appBar: AppBar(title: const Text('FAMILY PAIRING')),
+      body: FadeIn(
+        duration: const Duration(milliseconds: 600),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.blueAccent.withOpacity(0.1),
+                ),
+                child: const Icon(Icons.qr_code_scanner_rounded, size: 80, color: Colors.blueAccent),
               ),
-            ),
-            const SizedBox(height: 48),
-            
-            FadeInLeft(
-              delay: const Duration(milliseconds: 700),
-              child: ElevatedButton.icon(
+              const SizedBox(height: 32),
+              Text(
+                'PAIR DEVICE',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 22,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Join a family group to enable shared threat intelligence and protected scanning.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white.withOpacity(0.4), height: 1.5),
+              ),
+              const SizedBox(height: 56),
+              
+              ElevatedButton.icon(
                 onPressed: _showScanner,
-                icon: const Icon(Icons.camera_alt),
-                label: const Text('Scan Admin QR Code'),
+                icon: const Icon(Icons.camera_alt_rounded, size: 20),
+                label: const Text('SCAN ADMIN QR CODE'),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
               ),
-            ),
-            
-            const SizedBox(height: 32),
-            
-            FadeIn(
-              delay: const Duration(milliseconds: 900),
-              child: const Row(
+              
+              const SizedBox(height: 48),
+              
+              Row(
                 children: [
-                  Expanded(child: Divider()),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('OR')),
-                  Expanded(child: Divider()),
+                  Expanded(child: Divider(color: Colors.white.withOpacity(0.05))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('OR ENTER MANUALLY', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.white.withOpacity(0.2), letterSpacing: 1)),
+                  ),
+                  Expanded(child: Divider(color: Colors.white.withOpacity(0.05))),
                 ],
               ),
-            ),
-            
-            const SizedBox(height: 32),
-            
-            FadeInRight(
-              delay: const Duration(milliseconds: 1100),
-              child: Column(
+              
+              const SizedBox(height: 48),
+              
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   TextField(
@@ -104,24 +110,29 @@ class _UserPairingScreenState extends State<UserPairingScreen> {
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 20, letterSpacing: 4, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
-                      labelText: 'Family Invite Code',
+                      labelText: 'FAMILY INVITE CODE',
+                      labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1),
                       hintText: 'ABCD-1234',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      fillColor: theme.cardTheme.color,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
                       if (_codeController.text.isNotEmpty) {
                         _onCodeValid();
                       }
                     },
-                    child: const Text('Join Family Group'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white10,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('JOIN FAMILY GROUP'),
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

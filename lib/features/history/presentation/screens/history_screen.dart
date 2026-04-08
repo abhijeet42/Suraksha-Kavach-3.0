@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../providers/sms_history_provider.dart';
 import '../../../../data/models/risk_level.dart';
 import 'sms_detail_screen.dart';
-import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -11,103 +13,137 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final historyProvider = context.watch<SmsHistoryProvider>();
-
-    final dateFormat = DateFormat('MMM dd, yyyy - HH:mm');
+    final theme = Theme.of(context);
+    final dateFormat = DateFormat('MMM dd, yyyy • HH:mm');
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Threat History'),
+        title: const Text('THREAT LOGS'),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
+          preferredSize: const Size.fromHeight(80),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
             child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search sender or message...',
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.grey.shade100,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
-              ),
               onChanged: (val) => context.read<SmsHistoryProvider>().setSearchQuery(val),
+              decoration: InputDecoration(
+                hintText: 'Search sender or message keywords...',
+                prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                fillColor: theme.cardTheme.color,
+              ),
             ),
           ),
         ),
       ),
-      body: Column(
-        children: [
-          // Filter Chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              children: [
-                _buildFilterChip(context, 'All', null, null),
-                const SizedBox(width: 8),
-                _buildFilterChip(context, 'Scam', RiskLevel.scam, Colors.red),
-                const SizedBox(width: 8),
-                _buildFilterChip(context, 'Suspicious', RiskLevel.suspicious, Colors.orange),
-                const SizedBox(width: 8),
-                _buildFilterChip(context, 'Safe', RiskLevel.safe, Colors.green),
-              ],
+      body: FadeIn(
+        duration: const Duration(milliseconds: 600),
+        child: Column(
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Row(
+                children: [
+                  _buildFilterChip(context, 'ALL', null, null),
+                  const SizedBox(width: 10),
+                  _buildFilterChip(context, 'SCAM', RiskLevel.scam, Colors.redAccent),
+                  const SizedBox(width: 10),
+                  _buildFilterChip(context, 'SUSPICIOUS', RiskLevel.suspicious, Colors.orangeAccent),
+                  const SizedBox(width: 10),
+                  _buildFilterChip(context, 'SAFE', RiskLevel.safe, Colors.greenAccent),
+                ],
+              ),
             ),
-          ),
-          const Divider(),
-          // List View
-          Expanded(
-            child: historyProvider.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : historyProvider.records.isEmpty
-                    ? const Center(child: Text('No messages found based on filters.'))
-                    : ListView.builder(
-                        itemCount: historyProvider.records.length,
-                        itemBuilder: (context, idx) {
-                          final record = historyProvider.records[idx];
-                          final date = DateTime.fromMillisecondsSinceEpoch(record.timestamp);
+            Expanded(
+              child: historyProvider.isLoading
+                  ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
+                  : historyProvider.records.isEmpty
+                      ? _buildEmptyState(theme)
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          itemCount: historyProvider.records.length,
+                          itemBuilder: (context, idx) {
+                            final record = historyProvider.records[idx];
+                            final date = DateTime.fromMillisecondsSinceEpoch(record.timestamp);
 
-                          return Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            color: record.riskLevel.color.withAlpha(20),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(color: record.riskLevel.color.withAlpha(100)),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ListTile(
-                              leading: Icon(record.riskLevel.icon, color: record.riskLevel.color, size: 36),
-                              title: Text(record.sender, style: const TextStyle(fontWeight: FontWeight.bold)),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    record.message,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: Card(
+                                color: record.riskLevel.color.withOpacity(0.04),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide(
+                                    color: record.riskLevel.color.withOpacity(0.12),
+                                    width: 1.5,
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    dateFormat.format(date),
-                                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(16),
+                                  leading: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: record.riskLevel.color.withOpacity(0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(record.riskLevel.icon, color: record.riskLevel.color, size: 24),
                                   ),
-                                ],
+                                  title: Text(
+                                    record.sender,
+                                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        record.message,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        dateFormat.format(date).toUpperCase(),
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w800,
+                                          letterSpacing: 0.5,
+                                          color: Colors.white24,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.white.withOpacity(0.1)),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SmsDetailScreen(record: record),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                              trailing: const Icon(Icons.chevron_right),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SmsDetailScreen(record: record),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
+                            );
+                          },
+                        ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(ThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.history_rounded, size: 64, color: Colors.white.withOpacity(0.05)),
+          const SizedBox(height: 16),
+          Text(
+            'No matching threat logs.',
+            style: TextStyle(color: Colors.white.withOpacity(0.2), fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -117,22 +153,29 @@ class HistoryScreen extends StatelessWidget {
   Widget _buildFilterChip(BuildContext context, String label, RiskLevel? level, Color? dotColor) {
     final activeFilter = context.watch<SmsHistoryProvider>().activeFilter;
     final isSelected = activeFilter == level;
+    final theme = Theme.of(context);
 
     return FilterChip(
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (dotColor != null) ...[
-            Container(
-              width: 8, height: 8,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: dotColor),
-            ),
-            const SizedBox(width: 6),
-          ],
-          Text(label),
-        ],
+      showCheckmark: false,
+      label: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 1,
+          color: isSelected ? Colors.black : Colors.white54,
+        ),
       ),
       selected: isSelected,
+      selectedColor: theme.primaryColor,
+      backgroundColor: theme.cardTheme.color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: isSelected ? theme.primaryColor : Colors.white.withOpacity(0.05),
+          width: 1,
+        ),
+      ),
       onSelected: (bool selected) {
         context.read<SmsHistoryProvider>().setFilter(selected ? level : null);
       },

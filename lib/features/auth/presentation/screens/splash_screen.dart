@@ -28,35 +28,28 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF121212), // Always boot in dark
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FadeInDown(
-              duration: const Duration(milliseconds: 1500),
-              child: ZoomIn(
-                duration: const Duration(milliseconds: 1000),
-                delay: const Duration(milliseconds: 500),
-                child: Container(
-                  width: 180,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.amber.withAlpha(50),
-                        blurRadius: 40,
-                        spreadRadius: 10,
-                      )
-                    ],
-                  ),
-                  child: Image.asset('assets/images/logo.png'),
+      body: FadeIn(
+        duration: const Duration(milliseconds: 800),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.amber.withAlpha(50),
+                      blurRadius: 40,
+                      spreadRadius: 10,
+                    )
+                  ],
                 ),
+                child: Image.asset('assets/images/logo.png'),
               ),
-            ),
-            const SizedBox(height: 48),
-            FadeInUp(
-              delay: const Duration(milliseconds: 1000),
-              child: Column(
+              const SizedBox(height: 48),
+              Column(
                 children: [
                   Text(
                     'SURAKSHA KAVACH',
@@ -78,11 +71,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 64),
-            FadeIn(
-              delay: const Duration(milliseconds: 2000),
-              child: const SizedBox(
+              const SizedBox(height: 64),
+              const SizedBox(
                 width: 40,
                 height: 40,
                 child: CircularProgressIndicator(
@@ -90,18 +80,16 @@ class _SplashScreenState extends State<SplashScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            FadeIn(
-              delay: const Duration(milliseconds: 2500),
-              child: const Text(
+              const SizedBox(height: 16),
+              const Text(
                 'Initializing Secure Tunnel...',
                 style: TextStyle(color: Colors.white38, fontSize: 10),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
+

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/saved_sms_record.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../../data/models/saved_sms_record.dart';
 
 class SmsDetailScreen extends StatelessWidget {
   final SavedSmsRecord record;
@@ -9,110 +11,167 @@ class SmsDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('MMMM dd, yyyy - HH:mm:ss');
+    final dateFormat = DateFormat('MMMM dd, yyyy • HH:mm:ss');
     final date = DateTime.fromMillisecondsSinceEpoch(record.timestamp);
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Threat Analysis'),
+        title: const Text('THREAT ANALYSIS'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Risk Header
-            Card(
-              color: record.riskLevel.color.withAlpha(25),
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: record.riskLevel.color, width: 2),
-                borderRadius: BorderRadius.circular(16)
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    Icon(record.riskLevel.icon, size: 64, color: record.riskLevel.color),
-                    const SizedBox(height: 12),
-                    Text(
-                      record.riskLevel.displayName,
-                      style: theme.textTheme.displayLarge?.copyWith(
-                        color: record.riskLevel.color,
-                        fontSize: 24,
+      body: FadeIn(
+        duration: const Duration(milliseconds: 600),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Card(
+                color: record.riskLevel.color.withOpacity(0.05),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32),
+                  side: BorderSide(color: record.riskLevel.color.withOpacity(0.3), width: 2),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+                  child: Column(
+                    children: [
+                      Icon(record.riskLevel.icon, size: 80, color: record.riskLevel.color),
+                      const SizedBox(height: 24),
+                      Text(
+                        record.riskLevel.displayName.toUpperCase(),
+                        style: GoogleFonts.inter(
+                          color: record.riskLevel.color,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text('${record.score.toInt()}% Threat Score', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ],
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: record.riskLevel.color.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${record.score.toInt()}% RISK SCORE',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: record.riskLevel.color,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            
-            // Meta Info
-            Text('Sender Origin', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-            const SizedBox(height: 4),
-            Text(record.sender, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            
-            Text('Time Received', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-            const SizedBox(height: 4),
-            Text(dateFormat.format(date), style: const TextStyle(fontSize: 16)),
-            const SizedBox(height: 24),
+              const SizedBox(height: 40),
+              
+              _buildMetaSection(theme, 'SENDER ORIGIN', record.sender),
+              const SizedBox(height: 32),
+              _buildMetaSection(theme, 'TIME RECEIVED', dateFormat.format(date).toUpperCase()),
+              const SizedBox(height: 32),
 
-            // Message Body
-            const Text('Message Body', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+              Text(
+                'MESSAGE BODY',
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.5,
+                  color: Colors.white.withOpacity(0.3),
+                ),
               ),
-              child: Text(record.message, style: const TextStyle(fontSize: 16, height: 1.5)),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: theme.cardTheme.color,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.white.withOpacity(0.05)),
+                ),
+                child: Text(
+                  record.message,
+                  style: const TextStyle(fontSize: 16, height: 1.6, fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(height: 40),
 
-            // Flag Reasons
-            const Text('AI Threat Intelligence Flags', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 12),
-            ...record.flags.map((flag) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.flag, color: record.riskLevel.color, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(flag, style: const TextStyle(fontSize: 15))),
-                ],
+              Text(
+                'AI INTELLIGENCE FLAGS',
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.5,
+                  color: Colors.white.withOpacity(0.3),
+                ),
               ),
-            )),
-            
-            const SizedBox(height: 40),
-            
-            // Actions
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.report, color: Colors.white),
-              label: const Text('Report to Community Database', style: TextStyle(color: Colors.white)),
-              style: ElevatedButton.styleFrom(backgroundColor: theme.colorScheme.primary),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton.icon(
-              onPressed: () {
-                // Future Implementation -> call Provider delete
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.delete, color: Colors.red),
-              label: const Text('Delete Log', style: TextStyle(color: Colors.red)),
-              style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.red)),
-            )
-          ],
+              const SizedBox(height: 16),
+              ...record.flags.map((flag) => Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: CircleAvatar(radius: 3, backgroundColor: record.riskLevel.color),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        flag,
+                        style: const TextStyle(fontSize: 15, color: Colors.white70, height: 1.4),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+              
+              const SizedBox(height: 64),
+              
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.report_gmailerrorred_rounded, size: 20),
+                label: const Text('REPORT TO DATABASE'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.delete_outline_rounded, size: 20, color: Colors.redAccent),
+                label: const Text('DELETE FROM HISTORY', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w800)),
+              ),
+              const SizedBox(height: 48),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildMetaSection(ThemeData theme, String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.5,
+            color: Colors.white.withOpacity(0.3),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 0.5),
+        ),
+      ],
     );
   }
 }

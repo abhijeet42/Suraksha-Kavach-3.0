@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../auth/providers/auth_provider.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
@@ -38,7 +39,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void _verifyOtp() async {
     final otp = _controllers.map((c) => c.text).join();
     if (otp.length == 6) {
-      // Mock Success for Hackathon
       final isAdmin = widget.authData['isAdmin'] as bool;
       if (isAdmin) {
         context.read<AuthProvider>().loginAsAdmin();
@@ -55,77 +55,83 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     final phone = widget.authData['phone'] ?? '+91 00000 00000';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Verify Access')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 32),
-            FadeInDown(
-              child: const Icon(Icons.security, size: 80, color: Colors.amber),
-            ),
-            const SizedBox(height: 24),
-            FadeInDown(
-              delay: const Duration(milliseconds: 300),
-              child: const Text('Authentication Token', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(height: 8),
-            FadeInDown(
-              delay: const Duration(milliseconds: 500),
-              child: Text(
-                'Enter the 6-digit secure code sent to $phone',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey),
+      appBar: AppBar(title: const Text('VERIFY ACCESS')),
+      body: FadeIn(
+        duration: const Duration(milliseconds: 600),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 48),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.amber.withOpacity(0.1),
+                ),
+                child: const Icon(Icons.security_rounded, size: 64, color: Colors.amber),
               ),
-            ),
-            const SizedBox(height: 48),
-            
-            FadeInUp(
-              delay: const Duration(milliseconds: 800),
-              child: Row(
+              const SizedBox(height: 32),
+              Text(
+                'AUTH TOKEN',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 22,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Enter the 6-digit secure code sent to\n$phone',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white.withOpacity(0.4), height: 1.5),
+              ),
+              const SizedBox(height: 56),
+              
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(6, (index) => SizedBox(
-                  width: 45,
+                  width: 48,
+                  height: 60,
                   child: TextField(
                     controller: _controllers[index],
                     focusNode: _focusNodes[index],
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.number,
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     maxLength: 1,
                     onChanged: (text) => _onOtpDigitChange(text, index),
                     decoration: InputDecoration(
                       counterText: '',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      fillColor: theme.cardTheme.color,
+                      contentPadding: EdgeInsets.zero,
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: theme.primaryColor, width: 2),
                       ),
                     ),
                   ),
                 )),
               ),
-            ),
-            
-            const SizedBox(height: 48),
-            
-            FadeInUp(
-              delay: const Duration(milliseconds: 1000),
-              child: ElevatedButton(
+              
+              const SizedBox(height: 56),
+              
+              ElevatedButton(
                 onPressed: _verifyOtp,
-                child: const Text('Authorize Access'),
+                child: const Text('AUTHORIZE ACCESS'),
               ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            FadeIn(
-              delay: const Duration(milliseconds: 1500),
-              child: TextButton(
+              
+              const SizedBox(height: 24),
+              
+              TextButton(
                 onPressed: () {},
-                child: const Text('Resend Token', style: TextStyle(color: Colors.white54)),
+                child: const Text(
+                  'RESEND TOKEN',
+                  style: TextStyle(color: Colors.white24, fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 1),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

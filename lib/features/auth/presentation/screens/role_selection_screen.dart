@@ -10,15 +10,16 @@ class RoleSelectionScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 48),
-              FadeInDown(
-                child: Center(
+      body: FadeIn(
+        duration: const Duration(milliseconds: 600),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 48),
+                Center(
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -28,30 +29,21 @@ class RoleSelectionScreen extends StatelessWidget {
                     child: Icon(Icons.shield, size: 80, color: theme.primaryColor),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              FadeIn(
-                delay: const Duration(milliseconds: 500),
-                child: Text(
+                const SizedBox(height: 24),
+                Text(
                   'Welcome to Suraksha Kavach',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 12),
-              FadeIn(
-                delay: const Duration(milliseconds: 700),
-                child: const Text(
+                const SizedBox(height: 12),
+                const Text(
                   'Choose your entry point to the secure ecosystem.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),
-              ),
-              const Spacer(),
-              
-              FadeInLeft(
-                delay: const Duration(milliseconds: 1000),
-                child: _buildRoleCard(
+                const Spacer(),
+                
+                _buildRoleCard(
                   context,
                   title: 'Admin Panel',
                   subtitle: 'Create a family group, generate invite codes, and monitor family safety.',
@@ -59,13 +51,10 @@ class RoleSelectionScreen extends StatelessWidget {
                   color: Colors.amber,
                   onTap: () => context.push('/admin-auth'),
                 ),
-              ),
-              
-              const SizedBox(height: 20),
-              
-              FadeInRight(
-                delay: const Duration(milliseconds: 1200),
-                child: _buildRoleCard(
+                
+                const SizedBox(height: 20),
+                
+                _buildRoleCard(
                   context,
                   title: 'User Panel',
                   subtitle: 'Join a family group and protect your device from phishing scams.',
@@ -73,10 +62,10 @@ class RoleSelectionScreen extends StatelessWidget {
                   color: Colors.blueAccent,
                   onTap: () => context.push('/user-pairing'),
                 ),
-              ),
-              
-              const SizedBox(height: 48),
-            ],
+                
+                const SizedBox(height: 48),
+              ],
+            ),
           ),
         ),
       ),
