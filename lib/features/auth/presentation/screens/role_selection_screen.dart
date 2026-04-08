@@ -13,7 +13,7 @@ class RoleSelectionScreen extends StatelessWidget {
       body: FadeIn(
         duration: const Duration(milliseconds: 600),
         child: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -41,7 +41,7 @@ class RoleSelectionScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),
-                const Spacer(),
+                const SizedBox(height: 60),
                 
                 _buildRoleCard(
                   context,

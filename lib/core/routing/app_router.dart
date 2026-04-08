@@ -10,6 +10,8 @@ import '../../features/auth/presentation/screens/common/otp_verification_screen.
 import '../../features/auth/presentation/screens/user/user_pairing_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/family_shield/presentation/screens/family_dashboard_screen.dart';
+import '../../features/family_shield/presentation/screens/family_member_detail_screen.dart';
+import '../../features/family_shield/models/family_member.dart';
 import '../../features/history/presentation/screens/history_screen.dart';
 import '../../features/reporting/presentation/screens/report_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
@@ -58,6 +60,7 @@ class AppRouter {
              GoRoute(path: '/dashboard', builder: (context, state) => const DashboardScreen()),
              GoRoute(path: '/history', builder: (context, state) => const HistoryScreen()),
              GoRoute(path: '/family-dashboard', builder: (context, state) => const FamilyDashboardScreen()),
+             GoRoute(path: '/member-detail', builder: (context, state) => FamilyMemberDetailScreen(member: state.extra as FamilyMember)),
              GoRoute(path: '/report', builder: (context, state) => const ReportScreen()),
              GoRoute(path: '/settings', builder: (context, state) => const SettingsScreen()),
              GoRoute(path: '/profile-edit', builder: (context, state) => const ProfileEditScreen()),

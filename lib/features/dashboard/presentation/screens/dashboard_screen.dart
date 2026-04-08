@@ -10,6 +10,8 @@ import 'package:suraksha_kavach/features/history/providers/sms_history_provider.
 import 'package:suraksha_kavach/features/engine_analysis/rule_based/rule_based_analyzer.dart';
 import 'package:suraksha_kavach/features/ocr/services/ocr_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:suraksha_kavach/features/family_shield/providers/family_admin_provider.dart';
+import 'package:suraksha_kavach/features/family_shield/providers/family_member_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -158,6 +160,8 @@ class DashboardScreen extends StatelessWidget {
     final authProvider = context.watch<AuthProvider>();
     final smsProvider = context.watch<SmsStreamProvider>();
     final historyProvider = context.watch<SmsHistoryProvider>();
+    final adminProvider = context.watch<FamilyAdminProvider>();
+    final memberProvider = context.watch<FamilyMemberProvider>();
     final theme = Theme.of(context);
 
     final userName = authProvider.isAdmin ? "Admin" : "Member";
@@ -167,8 +171,16 @@ class DashboardScreen extends StatelessWidget {
         title: const Text('SURAKSHA KAVACH'),
         actions: [
           IconButton(
+            onPressed: () {
+              context.read<AuthProvider>().logout();
+            }, 
+            icon: const Icon(Icons.logout_rounded, color: Colors.white54),
+            tooltip: 'Logout',
+          ),
+          IconButton(
             onPressed: () {}, 
             icon: Icon(Icons.shield_rounded, color: theme.primaryColor),
+            tooltip: 'Security Status',
           ),
           const SizedBox(width: 8),
         ],
@@ -242,11 +254,37 @@ class DashboardScreen extends StatelessWidget {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     leading: const Icon(Icons.family_restroom_rounded, color: Colors.black),
                     title: const Text('Family Security', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
-                    subtitle: const Text('3 members protected', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w600)),
+                    subtitle: Text('${adminProvider.members.length} members protected', style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600)),
                     trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 14),
                     onTap: () => context.go('/family-dashboard'),
                   ),
                 ),
+                const SizedBox(height: 32),
+              ] else ...[
+                Card(
+                  color: memberProvider.isConnected ? Colors.greenAccent.withOpacity(0.1) : Colors.redAccent.withOpacity(0.1),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: memberProvider.isConnected ? Colors.greenAccent.withOpacity(0.5) : Colors.redAccent.withOpacity(0.5)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    leading: Icon(memberProvider.isConnected ? Icons.wifi_rounded : Icons.wifi_off_rounded, color: memberProvider.isConnected ? Colors.greenAccent : Colors.redAccent),
+                    title: Text(memberProvider.isConnected ? 'Connected to ${memberProvider.connectedFamily?.adminName}' : 'Not connected to a Family', style: TextStyle(color: memberProvider.isConnected ? Colors.greenAccent : Colors.white, fontWeight: FontWeight.w900)),
+                    subtitle: Text('Family Cyber Score: ${memberProvider.familyScore}/100', style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                    trailing: !memberProvider.isConnected ? TextButton(onPressed: () => context.push('/user-pairing'), child: const Text('JOIN NOW')) : null,
+                  ),
+                ),
+                if (memberProvider.isConnected)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () => memberProvider.sendMockHackathonAlert(),
+                      icon: const Icon(Icons.bug_report_rounded),
+                      label: const Text('DEMO: SEND MOCK SCAM ALERT'),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent.withOpacity(0.2), foregroundColor: Colors.redAccent),
+                    ),
+                  ),
                 const SizedBox(height: 32),
               ],
 

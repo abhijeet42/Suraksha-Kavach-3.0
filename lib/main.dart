@@ -5,7 +5,8 @@ import 'core/routing/app_router.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/sms_detection/providers/sms_stream_provider.dart';
 import 'features/history/providers/sms_history_provider.dart';
-import 'features/family_shield/providers/family_provider.dart';
+import 'features/family_shield/providers/family_admin_provider.dart';
+import 'features/family_shield/providers/family_member_provider.dart';
 import 'core/database/hive_service.dart';
 import 'core/theme/theme_provider.dart';
 
@@ -19,7 +20,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => FamilyProvider()),
+        ChangeNotifierProvider(create: (_) => FamilyAdminProvider()),
+        ChangeNotifierProvider(create: (_) => FamilyMemberProvider()),
         ChangeNotifierProvider(create: (_) => SmsHistoryProvider()),
         ChangeNotifierProxyProvider<SmsHistoryProvider, SmsStreamProvider>(
           create: (_) => SmsStreamProvider(),
