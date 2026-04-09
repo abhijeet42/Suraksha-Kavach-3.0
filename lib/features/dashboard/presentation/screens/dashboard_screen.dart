@@ -12,9 +12,64 @@ import 'package:suraksha_kavach/features/ocr/services/ocr_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:suraksha_kavach/features/family_shield/providers/family_admin_provider.dart';
 import 'package:suraksha_kavach/features/family_shield/providers/family_member_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
+  
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Future<void> _makeCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (!await launchUrl(launchUri)) {
+      throw Exception('Could not launch $launchUri');
+    }
+  }
+
+  void _showBlockInstructions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Block Scammer'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('To block a suspicious number:'),
+            SizedBox(height: 12),
+            Text('1. Open your Phone/SMS app.'),
+            Text('2. Tap on the scammer\'s number.'),
+            Text('3. Select "Block" or "Report Spam".'),
+            SizedBox(height: 12),
+            Text('Note: System-level blocking provides the most reliable protection.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Got it'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              // Open dialer as a shortcut
+              final Uri launchUri = Uri(scheme: 'tel');
+              launchUrl(launchUri);
+            },
+            child: const Text('Open Dialer'),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _requestSmsPermission(BuildContext context) async {
     final status = await Permission.sms.request();
@@ -223,24 +278,50 @@ class DashboardScreen extends StatelessWidget {
 
               const Text('QUICK ACTIONS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 1, color: Colors.white38)),
               const SizedBox(height: 16),
-              Row(
+              Column(
                 children: [
-                  Expanded(
-                    child: _buildQuickActionCard(
-                      context, 
-                      'Manual Scan', 
-                      Icons.qr_code_scanner_rounded, 
-                      () => _showManualScanDialog(context)
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickActionCard(
+                          context, 
+                          'Manual Scan', 
+                          Icons.qr_code_scanner_rounded, 
+                          () => _showManualScanDialog(context)
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildQuickActionCard(
+                          context, 
+                          'Cyber Report', 
+                          Icons.gavel_rounded, 
+                          () => _launchURL('https://cybercrime.gov.in/')
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildQuickActionCard(
-                      context, 
-                      'Report', 
-                      Icons.flag_rounded, 
-                      () => DefaultTabController.of(context).animateTo(3)
-                    ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickActionCard(
+                          context, 
+                          'Call Helpline', 
+                          Icons.phone_in_talk_rounded, 
+                          () => _makeCall('1930')
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildQuickActionCard(
+                          context, 
+                          'Block Scam', 
+                          Icons.block_rounded, 
+                          () => _showBlockInstructions(context)
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
