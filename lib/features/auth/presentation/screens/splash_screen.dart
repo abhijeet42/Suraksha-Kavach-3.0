@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../providers/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -32,64 +33,85 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Always boot in dark
+      backgroundColor: const Color(0xFF0A0A0A), // Deep Obsidian Black
       body: FadeIn(
-        duration: const Duration(milliseconds: 800),
+        duration: const Duration(milliseconds: 1500),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Shield Icon with smooth glow
               Container(
-                width: 180,
-                height: 180,
                 decoration: BoxDecoration(
+                  shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.amber.withAlpha(50),
-                      blurRadius: 40,
-                      spreadRadius: 10,
+                      color: Colors.amber.withOpacity(0.15),
+                      blurRadius: 50,
+                      spreadRadius: 20,
                     )
                   ],
                 ),
-                child: Image.asset('assets/images/logo.png'),
+                child: const Icon(
+                  Icons.shield_rounded,
+                  size: 140,
+                  color: Colors.amber,
+                ),
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 56),
+              // Premium Typography
               Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    'SURAKSHA KAVACH',
-                    style: TextStyle(
-                      letterSpacing: 4,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.amber.shade400,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0), // Compensate for trailing letter spacing
+                    child: Text(
+                      'SURAKSHA KAVACH',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.orbitron(
+                        letterSpacing: 8,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.amber.shade400,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'AI-POWERED DIGITAL SHIELD',
-                    style: TextStyle(
-                      letterSpacing: 2,
+                  const SizedBox(height: 16),
+                  Text(
+                    'INDIAS CYBERSHIELD ',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      letterSpacing: 4,
                       fontSize: 12,
-                      color: Colors.white54,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white24,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 64),
-              const SizedBox(
-                width: 40,
-                height: 40,
+              const SizedBox(height: 80),
+              // Smooth Spinner
+              SizedBox(
+                width: 32,
+                height: 32,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                  strokeWidth: 1.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.amber.withOpacity(0.5)),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Initializing Secure Tunnel...',
-                style: TextStyle(color: Colors.white38, fontSize: 10),
+              const SizedBox(height: 24),
+              Text(
+                'INITIALIZING SECURE MESH',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  letterSpacing: 2,
+                  color: Colors.white12,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
