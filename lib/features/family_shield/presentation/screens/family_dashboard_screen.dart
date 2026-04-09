@@ -179,10 +179,11 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                               icon: Icons.qr_code_scanner_rounded,
                               color: Colors.amber,
                               onTap: () {
-                                var payload = adminProvider.generateQrPayload('Guardian Admin');
+                                final adminName = context.read<AuthProvider>().user?.displayName ?? 'Guardian Admin';
+                                var payload = adminProvider.generateQrPayload(adminName);
                                 if (payload == null) {
                                   adminProvider.forceFallbackIp();
-                                  payload = adminProvider.generateQrPayload('Guardian Admin');
+                                  payload = adminProvider.generateQrPayload(adminName);
                                 }
                                 if (payload != null) _showQrOverlay(context, payload.toJson());
                               },

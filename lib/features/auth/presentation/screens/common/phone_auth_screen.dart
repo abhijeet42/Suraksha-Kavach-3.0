@@ -7,7 +7,8 @@ import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
   final bool isAdmin;
-  const PhoneAuthScreen({super.key, required this.isAdmin});
+  final bool isMock;
+  const PhoneAuthScreen({super.key, required this.isAdmin, this.isMock = false});
 
   @override
   State<PhoneAuthScreen> createState() => _PhoneAuthScreenState();
@@ -29,6 +30,18 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
     // Ensure phone number is in international format if not already
     final formattedPhone = phone.startsWith('+') ? phone : '+91$phone';
+
+    if (widget.isMock) {
+      context.read<AuthProvider>().sendMockOtp(formattedPhone, widget.isAdmin).then((_) {
+        context.push('/otp-verify', extra: {
+          'phone': formattedPhone,
+          'isAdmin': widget.isAdmin,
+          'isSignUp': _isSignUp,
+          'isMock': true,
+        });
+      });
+      return;
+    }
 
     context.read<AuthProvider>().sendOtp(
       formattedPhone,

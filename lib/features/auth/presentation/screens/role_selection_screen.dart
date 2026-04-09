@@ -49,7 +49,7 @@ class RoleSelectionScreen extends StatelessWidget {
                   subtitle: 'Create a family group, generate invite codes, and monitor family safety.',
                   icon: Icons.admin_panel_settings,
                   color: Colors.amber,
-                  onTap: () => context.push('/admin-auth'),
+                  onTap: () => context.push('/auth-selection', extra: {'isAdmin': true}),
                 ),
                 
                 const SizedBox(height: 20),

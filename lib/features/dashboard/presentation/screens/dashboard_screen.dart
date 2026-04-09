@@ -193,7 +193,7 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Hello, $userName.',
+                'Hello, ${authProvider.user?.displayName ?? userName}.',
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                   fontSize: 28,

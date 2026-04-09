@@ -39,21 +39,10 @@ class _UserPairingScreenState extends State<UserPairingScreen> {
   Future<void> _processPayload(String rawValue) async {
     try {
       final payload = QrPayload.fromJson(rawValue);
-      final success = await context.read<FamilyMemberProvider>().joinFamily(payload, 'Child Device');
+      context.read<FamilyMemberProvider>().setPendingPayload(payload);
       
       if (context.mounted) {
-        if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Joined Family: ${payload.adminName}'), backgroundColor: Colors.green),
-          );
-          // Auto login as member for demo
-          // We will trigger a fake login sequence and go to dashboard
-          context.go('/dashboard');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to join family. Ensure on same WiFi.'), backgroundColor: Colors.red),
-          );
-        }
+        context.push('/user-auth', extra: {'isMock': true});
       }
     } catch (e) {
       if (context.mounted) {

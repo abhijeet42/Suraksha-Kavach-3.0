@@ -40,9 +40,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     final otp = _controllers.map((c) => c.text).join();
     if (otp.length == 6) {
       final isAdmin = widget.authData['isAdmin'] as bool;
+      final isMock = widget.authData['isMock'] as bool? ?? false;
+      final phone = widget.authData['phone'] as String? ?? '';
       try {
-        await context.read<AuthProvider>().verifyOtp(otp, isAdmin);
-        context.go('/dashboard');
+        if (isMock) {
+          await context.read<AuthProvider>().verifyMockOtp(phone, otp, isAdmin);
+        } else {
+          await context.read<AuthProvider>().verifyOtp(otp, isAdmin);
+        }
+        if (mounted) context.go('/profile-setup');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),

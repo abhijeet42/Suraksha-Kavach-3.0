@@ -72,8 +72,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Abhijith', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('System Role: ${authProvider.isAdmin ? "Family Admin" : "Family Member"}', style: const TextStyle(color: Colors.white70)),
+                      Text(authProvider.user?.displayName ?? 'System User', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text('Role: ${authProvider.isAdmin ? "Family Admin" : "Family Member"}', style: const TextStyle(color: Colors.white70)),
                     ],
                   ),
                 ),

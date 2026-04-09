@@ -12,12 +12,20 @@ class FamilyMemberProvider extends ChangeNotifier {
   Timer? _syncTimer;
   int _familyScore = 100;
   bool _isConnected = false;
+  QrPayload? _pendingPayload;
 
   QrPayload? get connectedFamily => _connectedFamily;
   bool get isConnected => _isConnected;
   int get familyScore => _familyScore;
 
-  Future<bool> joinFamily(QrPayload payload, String memberName) async {
+  void setPendingPayload(QrPayload payload) {
+    _pendingPayload = payload;
+    notifyListeners();
+  }
+
+  Future<bool> joinFamily(String memberName) async {
+    if (_pendingPayload == null) return false;
+    final payload = _pendingPayload!;
     final url = Uri.parse('http://${payload.ipAddress}:${payload.port}/join');
     try {
       final response = await http.post(
@@ -32,6 +40,7 @@ class FamilyMemberProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         _connectedFamily = payload;
         _isConnected = true;
+        _pendingPayload = null;
         _startSyncTimer();
         notifyListeners();
         return true;
