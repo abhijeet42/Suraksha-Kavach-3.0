@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key});
@@ -8,9 +9,10 @@ class ReportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('REPORT THREAT')),
+      appBar: AppBar(title: Text(l10n.reportThreat)),
       body: FadeIn(
         duration: const Duration(milliseconds: 600),
         child: SingleChildScrollView(
@@ -28,13 +30,13 @@ class ReportScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               Text(
-                'COMMUNITY SHIELD',
+                l10n.communityShield,
                 style: GoogleFonts.inter(fontWeight: FontWeight.w900, fontSize: 24, letterSpacing: 1),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
               Text(
-                'Submit suspicious numbers or phishing links to update the global AI security definitions.',
+                l10n.communityShieldDesc,
                 style: TextStyle(color: Colors.white.withOpacity(0.4), height: 1.5),
                 textAlign: TextAlign.center,
               ),
@@ -43,7 +45,7 @@ class ReportScreen extends StatelessWidget {
                 keyboardType: TextInputType.phone,
                 style: const TextStyle(fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
-                  labelText: 'SENDER PHONE / ID',
+                  labelText: l10n.senderPhoneId,
                   labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1),
                   prefixIcon: const Icon(Icons.phone_rounded),
                   fillColor: theme.cardTheme.color,
@@ -53,7 +55,7 @@ class ReportScreen extends StatelessWidget {
               TextField(
                 maxLines: 4,
                 decoration: InputDecoration(
-                  labelText: 'SUSPICIOUS MESSAGE CONTENT',
+                  labelText: l10n.suspiciousMessageContent,
                   labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1),
                   alignLabelWithHint: true,
                   fillColor: theme.cardTheme.color,
@@ -63,14 +65,14 @@ class ReportScreen extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Report submitted to Community DB!'),
+                    SnackBar(
+                      content: Text(l10n.reportSubmitted),
                       backgroundColor: Colors.green,
                     ),
                   );
                 },
                 icon: const Icon(Icons.send_rounded, size: 20),
-                label: const Text('SUBMIT SECURE REPORT', style: TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1)),
+                label: Text(l10n.submitSecureReport, style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1)),
               ),
               const SizedBox(height: 48),
             ],

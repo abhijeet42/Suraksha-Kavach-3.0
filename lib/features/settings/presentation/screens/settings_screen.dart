@@ -5,6 +5,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
 import 'package:suraksha_kavach/core/theme/theme_provider.dart';
 import 'package:suraksha_kavach/core/theme/app_theme.dart';
+import 'package:suraksha_kavach/core/localization/locale_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,21 +20,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _voiceAlertsEnabled = false;
 
   void _showLogoutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to disconnect your digital shield?'),
+        title: Text(l10n.logout),
+        content: Text(l10n.areYouSureLogout),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               context.read<AuthProvider>().logout();
             }, 
-            child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            child: Text(l10n.logout, style: const TextStyle(color: Colors.red)),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final localeProvider = context.read<LocaleProvider>();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.language),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(l10n.english),
+              trailing: localeProvider.locale.languageCode == 'en' ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
+              onTap: () {
+                localeProvider.setLocale(const Locale('en'));
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              title: Text(l10n.hindi),
+              trailing: localeProvider.locale.languageCode == 'hi' ? Icon(Icons.check, color: Theme.of(context).primaryColor) : null,
+              onTap: () {
+                localeProvider.setLocale(const Locale('hi'));
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -42,10 +78,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final authProvider = context.watch<AuthProvider>();
 
     final themeProvider = context.watch<ThemeProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: FadeIn(
         duration: const Duration(milliseconds: 600),
         child: ListView(
@@ -72,8 +110,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(authProvider.user?.displayName ?? 'System User', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('Role: ${authProvider.isAdmin ? "Family Admin" : "Family Member"}', style: const TextStyle(color: Colors.white70)),
+                      Text(authProvider.user?.displayName ?? l10n.systemUser, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(l10n.roleLabel(authProvider.isAdmin ? l10n.familyAdmin : l10n.familyMember), style: const TextStyle(color: Colors.white70)),
                     ],
                   ),
                 ),
@@ -82,9 +120,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           
           const SizedBox(height: 24),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text('Galaxy Themes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(l10n.galaxyThemes, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -92,57 +130,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildThemeCard(context, themeProvider, AppThemeType.amber, 'Amber', Colors.amber),
-                _buildThemeCard(context, themeProvider, AppThemeType.forest, 'Forest', Colors.green),
-                _buildThemeCard(context, themeProvider, AppThemeType.purple, 'Purple', Colors.purple),
-                _buildThemeCard(context, themeProvider, AppThemeType.pink, 'Pink', Colors.pink),
-                _buildThemeCard(context, themeProvider, AppThemeType.white, 'White', Colors.grey),
+               children: [
+                _buildThemeCard(context, themeProvider, AppThemeType.amber, l10n.themeAmber, Colors.amber),
+                _buildThemeCard(context, themeProvider, AppThemeType.forest, l10n.themeForest, Colors.green),
+                _buildThemeCard(context, themeProvider, AppThemeType.purple, l10n.themePurple, Colors.purple),
+                _buildThemeCard(context, themeProvider, AppThemeType.pink, l10n.themePink, Colors.pink),
+                _buildThemeCard(context, themeProvider, AppThemeType.white, l10n.themeWhite, Colors.grey),
               ],
             ),
           ),
           
           const SizedBox(height: 16),
-          const Padding(padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), child: Text('App Preferences', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), child: Text(l10n.appPreferences, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
           
           SwitchListTile(
-            title: const Text('Push Notifications'),
-            subtitle: const Text('Alerts for new threat interceptions'),
+            title: Text(l10n.pushNotifications),
+            subtitle: Text(l10n.notificationsAlertsDesc),
             value: _notificationsEnabled,
             onChanged: (val) => setState(() => _notificationsEnabled = val),
             secondary: const Icon(Icons.notifications_active),
           ),
           SwitchListTile(
-            title: const Text('Voice Alerts (Accessibility)'),
-            subtitle: const Text('Read out threat warnings out loud'),
+            title: Text(l10n.voiceAlerts),
+            subtitle: Text(l10n.voiceAlertsDesc),
             value: _voiceAlertsEnabled,
             onChanged: (val) => setState(() => _voiceAlertsEnabled = val),
             secondary: const Icon(Icons.record_voice_over),
           ),
           ListTile(
             leading: const Icon(Icons.person),
-            title: const Text('Edit Profile'),
+            title: Text(l10n.editProfile),
             onTap: () => context.push('/profile-edit'),
           ),
           ListTile(
             leading: const Icon(Icons.notifications),
-            title: const Text('Notifications'),
+            title: Text(l10n.notifications),
             onTap: () {},
           ),
           ListTile(
             leading: const Icon(Icons.help_outline),
-            title: const Text('Help & Support'),
+            title: Text(l10n.helpSupport),
             onTap: () => context.push('/help'),
           ),
           ListTile(
             leading: const Icon(Icons.language),
-            title: const Text('Language'),
-            trailing: const Text('English', style: TextStyle(color: Colors.grey)),
-            onTap: () {},
+            title: Text(l10n.language),
+            trailing: Text(localeProvider.languageName, style: const TextStyle(color: Colors.grey)),
+            onTap: () => _showLanguageDialog(context),
           ),
           
           const Divider(height: 32),
-          const Padding(padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), child: Text('Account', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), child: Text(l10n.account, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey))),
           
           _buildLogoutItem(context),
           const SizedBox(height: 40),
@@ -177,9 +215,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildLogoutItem(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ListTile(
       leading: const Icon(Icons.logout, color: Colors.red),
-      title: const Text('Logout', style: TextStyle(color: Colors.red)),
+      title: Text(l10n.logout, style: const TextStyle(color: Colors.red)),
       onTap: () => _showLogoutDialog(context),
     );
   }

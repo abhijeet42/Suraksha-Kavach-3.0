@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 import 'package:suraksha_kavach/data/models/user_role.dart';
 import 'package:suraksha_kavach/features/family_shield/providers/family_member_provider.dart';
 
@@ -20,7 +21,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   void _onComplete() async {
     if (_nameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a display name')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.displayNameRequired)),
       );
       return;
     }
@@ -38,6 +39,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: FadeIn(
         child: Padding(
@@ -49,15 +51,15 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               const Icon(Icons.face_retouching_natural_rounded, size: 100, color: Colors.amber),
               const SizedBox(height: 32),
               Text(
-                'WHAT IS YOUR NAME?',
+                l10n.whatIsYourName,
                 style: GoogleFonts.outfit(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: 1),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
-              const Text(
-                'This name will identify your device in the family network.',
+              Text(
+                l10n.nameIdentifyDesc,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white38),
+                style: const TextStyle(color: Colors.white38),
               ),
               const SizedBox(height: 48),
               TextField(
@@ -65,7 +67,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
-                  hintText: 'Enter Display Name',
+                  hintText: l10n.enterDisplayName,
                   hintStyle: TextStyle(color: Colors.white.withOpacity(0.1)),
                   border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.amber.withOpacity(0.3))),
                 ),
@@ -73,7 +75,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               const SizedBox(height: 56),
               ElevatedButton(
                 onPressed: _onComplete,
-                child: const Text('COMPLETE SETUP'),
+                child: Text(l10n.completeSetup),
               ),
             ],
           ),

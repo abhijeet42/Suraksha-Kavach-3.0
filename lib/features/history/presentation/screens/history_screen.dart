@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../providers/sms_history_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 import '../../../../data/models/risk_level.dart';
 import 'sms_detail_screen.dart';
 
@@ -14,11 +15,12 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final historyProvider = context.watch<SmsHistoryProvider>();
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('MMM dd, yyyy • HH:mm');
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('THREAT LOGS'),
+        title: Text(l10n.threatLogs),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(80),
           child: Padding(
@@ -26,7 +28,7 @@ class HistoryScreen extends StatelessWidget {
             child: TextField(
               onChanged: (val) => context.read<SmsHistoryProvider>().setSearchQuery(val),
               decoration: InputDecoration(
-                hintText: 'Search sender or message keywords...',
+                hintText: l10n.searchSenderHint,
                 prefixIcon: const Icon(Icons.search_rounded, size: 20),
                 contentPadding: const EdgeInsets.symmetric(vertical: 16),
                 fillColor: theme.cardTheme.color,
@@ -44,13 +46,13 @@ class HistoryScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Row(
                 children: [
-                  _buildFilterChip(context, 'ALL', null, null),
+                  _buildFilterChip(context, l10n.filterAll, null, null),
                   const SizedBox(width: 10),
-                  _buildFilterChip(context, 'SCAM', RiskLevel.scam, Colors.redAccent),
+                  _buildFilterChip(context, l10n.filterScam, RiskLevel.scam, Colors.redAccent),
                   const SizedBox(width: 10),
-                  _buildFilterChip(context, 'SUSPICIOUS', RiskLevel.suspicious, Colors.orangeAccent),
+                  _buildFilterChip(context, l10n.filterSuspicious, RiskLevel.suspicious, Colors.orangeAccent),
                   const SizedBox(width: 10),
-                  _buildFilterChip(context, 'SAFE', RiskLevel.safe, Colors.greenAccent),
+                  _buildFilterChip(context, l10n.filterSafe, RiskLevel.safe, Colors.greenAccent),
                 ],
               ),
             ),
@@ -58,7 +60,7 @@ class HistoryScreen extends StatelessWidget {
               child: historyProvider.isLoading
                   ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
                   : historyProvider.records.isEmpty
-                      ? _buildEmptyState(theme)
+                      ? _buildEmptyState(context, theme)
                       : ListView.builder(
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                           itemCount: historyProvider.records.length,
@@ -134,7 +136,8 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(ThemeData theme) {
+  Widget _buildEmptyState(BuildContext context, ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -142,7 +145,7 @@ class HistoryScreen extends StatelessWidget {
           Icon(Icons.history_rounded, size: 64, color: Colors.white.withOpacity(0.05)),
           const SizedBox(height: 16),
           Text(
-            'No matching threat logs.',
+            l10n.noMatchingThreats,
             style: TextStyle(color: Colors.white.withOpacity(0.2), fontWeight: FontWeight.w600),
           ),
         ],

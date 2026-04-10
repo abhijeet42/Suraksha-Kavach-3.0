@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final Map<String, dynamic> authData;
@@ -61,10 +62,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final authProvider = context.watch<AuthProvider>();
+    final l10n = AppLocalizations.of(context)!;
     final phone = widget.authData['phone'] ?? '+91 00000 00000';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('VERIFY ACCESS')),
+      appBar: AppBar(title: Text(l10n.verifyAccess)),
       body: FadeIn(
         duration: const Duration(milliseconds: 600),
         child: SingleChildScrollView(
@@ -82,7 +84,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
               const SizedBox(height: 32),
               Text(
-                'AUTH TOKEN',
+                l10n.authToken,
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w900,
                   fontSize: 22,
@@ -91,7 +93,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Enter the 6-digit secure code sent to\n$phone',
+                '${l10n.enterOtp('6')}\n$phone',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white.withOpacity(0.4), height: 1.5),
               ),
@@ -129,16 +131,16 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 onPressed: authProvider.isLoading ? null : _verifyOtp,
                 child: authProvider.isLoading 
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('AUTHORIZE ACCESS'),
+                  : Text(l10n.authorizeAccess),
               ),
               
               const SizedBox(height: 24),
               
               TextButton(
                 onPressed: () {},
-                child: const Text(
-                  'RESEND TOKEN',
-                  style: TextStyle(color: Colors.white24, fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 1),
+                child: Text(
+                  l10n.resendToken,
+                  style: const TextStyle(color: Colors.white24, fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 1),
                 ),
               ),
             ],

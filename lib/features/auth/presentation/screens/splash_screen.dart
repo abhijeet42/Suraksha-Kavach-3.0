@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../providers/auth_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -34,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A), // Deep Obsidian Black
@@ -69,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0), // Compensate for trailing letter spacing
                     child: Text(
-                      'SURAKSHA KAVACH',
+                      l10n.appTitle,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.orbitron(
                         letterSpacing: 8,
@@ -81,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'INDIAS CYBERSHIELD ',
+                    l10n.indiasCybershield,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       letterSpacing: 4,
@@ -104,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'INITIALIZING SECURE MESH',
+                l10n.initializingMesh,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   letterSpacing: 2,

@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:suraksha_kavach/features/family_shield/providers/family_admin_provider.dart';
 import 'package:suraksha_kavach/features/family_shield/providers/family_member_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -35,27 +36,28 @@ class DashboardScreen extends StatelessWidget {
   }
 
   void _showBlockInstructions(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Block Scammer'),
-        content: const Column(
+        title: Text(l10n.blockScam),
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('To block a suspicious number:'),
-            SizedBox(height: 12),
-            Text('1. Open your Phone/SMS app.'),
-            Text('2. Tap on the scammer\'s number.'),
-            Text('3. Select "Block" or "Report Spam".'),
-            SizedBox(height: 12),
-            Text('Note: System-level blocking provides the most reliable protection.'),
+            Text(l10n.blockScam),
+            const SizedBox(height: 12),
+            Text(l10n.blockStep1),
+            Text(l10n.blockStep2),
+            Text(l10n.blockStep3),
+            const SizedBox(height: 12),
+            Text(l10n.blockNote),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Got it'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -64,7 +66,7 @@ class DashboardScreen extends StatelessWidget {
               final Uri launchUri = Uri(scheme: 'tel');
               launchUrl(launchUri);
             },
-            child: const Text('Open Dialer'),
+            child: Text(l10n.openDialer),
           ),
         ],
       ),
@@ -77,19 +79,20 @@ class DashboardScreen extends StatelessWidget {
       if (context.mounted) {
         context.read<SmsStreamProvider>().startListening();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('SMS Shield Active and Listening!')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.smsShieldActive)),
         );
       }
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Permission Denied. Cannot protect SMS.')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.permissionDenied)),
         );
       }
     }
   }
 
   void _showManualScanDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final controller = TextEditingController();
     final ocrService = OcrService();
     bool useHindi = false;
@@ -99,13 +102,13 @@ class DashboardScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Manual Scan'),
+          title: Text(l10n.manualScan),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
-                  const Text('Hindi Support', style: TextStyle(fontSize: 12)),
+                  Text(l10n.hindiSupport, style: const TextStyle(fontSize: 12)),
                   const Spacer(),
                   Switch(
                     value: useHindi,
@@ -125,7 +128,7 @@ class DashboardScreen extends StatelessWidget {
                   controller: controller,
                   maxLines: 4,
                   decoration: InputDecoration(
-                    hintText: 'Paste message or link here...',
+                    hintText: l10n.pasteMessageHint,
                     border: const OutlineInputBorder(),
                     suffixIcon: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -161,7 +164,7 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
             ElevatedButton(
               onPressed: isLoading ? null : () async {
                 final text = controller.text;
@@ -182,7 +185,7 @@ class DashboardScreen extends StatelessWidget {
                   _showAnalysisResultDialog(context, text, result);
                 }
               }, 
-              child: const Text('Analyze'),
+              child: Text(l10n.analyze),
             ),
           ],
         ),
@@ -191,6 +194,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   void _showAnalysisResultDialog(BuildContext context, String text, dynamic result) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => ZoomIn(
@@ -226,7 +230,7 @@ class DashboardScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('THREAT SCORE', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.white38)),
+                  Text(l10n.threatScore, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.white38)),
                   Text('${result.riskScore.toInt()}%', style: TextStyle(fontWeight: FontWeight.w900, color: result.level.color)),
                 ],
               ),
@@ -238,7 +242,7 @@ class DashboardScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               const SizedBox(height: 24),
-              const Text('HEURISTIC FLAGS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.white38)),
+              Text(l10n.heuristicFlags, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.white38)),
               const SizedBox(height: 8),
               ...result.flagReasons.map((f) => Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
@@ -256,7 +260,7 @@ class DashboardScreen extends StatelessWidget {
             Center(
               child: TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('DISMISS ANALYSIS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white54)),
+                child: Text(l10n.dismissAnalysis, style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.white54)),
               ),
             ),
           ],
@@ -273,24 +277,25 @@ class DashboardScreen extends StatelessWidget {
     final adminProvider = context.watch<FamilyAdminProvider>();
     final memberProvider = context.watch<FamilyMemberProvider>();
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     final userName = authProvider.isAdmin ? "Admin" : "Member";
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SURAKSHA KAVACH'),
+        title: Text(l10n.appTitle),
         actions: [
           IconButton(
             onPressed: () {
               context.read<AuthProvider>().logout();
             }, 
             icon: const Icon(Icons.logout_rounded, color: Colors.white54),
-            tooltip: 'Logout',
+            tooltip: l10n.logout,
           ),
           IconButton(
             onPressed: () {}, 
             icon: Icon(Icons.shield_rounded, color: theme.primaryColor),
-            tooltip: 'Security Status',
+            tooltip: l10n.securityStatus,
           ),
           const SizedBox(width: 8),
         ],
@@ -303,7 +308,7 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Hello, ${authProvider.user?.displayName ?? userName}.',
+                l10n.hello(authProvider.user?.displayName ?? userName),
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                   fontSize: 28,
@@ -312,7 +317,7 @@ class DashboardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Your digital shield is actively monitoring.',
+                l10n.digitalShieldActive,
                 style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.5), fontSize: 15),
               ),
               const SizedBox(height: 32),
@@ -323,15 +328,15 @@ class DashboardScreen extends StatelessWidget {
               
               Row(
                 children: [
-                  Expanded(child: _buildStatCard(context, '${historyProvider.totalScams}', 'Scams Blocked', Icons.block_rounded, Colors.redAccent)),
+                  Expanded(child: _buildStatCard(context, '${historyProvider.totalScams}', l10n.scamsBlocked, Icons.block_rounded, Colors.redAccent)),
                   const SizedBox(width: 16),
-                  Expanded(child: _buildStatCard(context, '${historyProvider.totalSafe}', 'Safe Messages', Icons.check_circle_rounded, Colors.greenAccent)),
+                  Expanded(child: _buildStatCard(context, '${historyProvider.totalSafe}', l10n.safeMessages, Icons.check_circle_rounded, Colors.greenAccent)),
                 ],
               ),
               
               const SizedBox(height: 32),
 
-              const Text('QUICK ACTIONS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 1, color: Colors.white38)),
+              Text(l10n.quickActions, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 1, color: Colors.white38)),
               const SizedBox(height: 16),
               Column(
                 children: [
@@ -340,7 +345,7 @@ class DashboardScreen extends StatelessWidget {
                       Expanded(
                         child: _buildQuickActionCard(
                           context, 
-                          'Manual Scan', 
+                          l10n.manualScan, 
                           Icons.qr_code_scanner_rounded, 
                           () => _showManualScanDialog(context)
                         ),
@@ -349,7 +354,7 @@ class DashboardScreen extends StatelessWidget {
                       Expanded(
                         child: _buildQuickActionCard(
                           context, 
-                          'Cyber Report', 
+                          l10n.cyberReport, 
                           Icons.gavel_rounded, 
                           () => _launchURL('https://cybercrime.gov.in/')
                         ),
@@ -362,7 +367,7 @@ class DashboardScreen extends StatelessWidget {
                       Expanded(
                         child: _buildQuickActionCard(
                           context, 
-                          'Call Helpline', 
+                          l10n.callHelpline, 
                           Icons.phone_in_talk_rounded, 
                           () => _makeCall('1930')
                         ),
@@ -371,7 +376,7 @@ class DashboardScreen extends StatelessWidget {
                       Expanded(
                         child: _buildQuickActionCard(
                           context, 
-                          'Block Scam', 
+                          l10n.blockScam, 
                           Icons.block_rounded, 
                           () => _showBlockInstructions(context)
                         ),
@@ -389,8 +394,8 @@ class DashboardScreen extends StatelessWidget {
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     leading: const Icon(Icons.family_restroom_rounded, color: Colors.black),
-                    title: const Text('Family Security', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
-                    subtitle: Text('${adminProvider.members.length} members protected', style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600)),
+                    title: Text(l10n.familySecurity, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w900)),
+                    subtitle: Text(l10n.membersProtected(adminProvider.members.length.toString()), style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600)),
                     trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 14),
                     onTap: () => context.go('/family-dashboard'),
                   ),
@@ -406,9 +411,9 @@ class DashboardScreen extends StatelessWidget {
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     leading: Icon(memberProvider.isConnected ? Icons.wifi_rounded : Icons.wifi_off_rounded, color: memberProvider.isConnected ? Colors.greenAccent : Colors.redAccent),
-                    title: Text(memberProvider.isConnected ? 'Connected to ${memberProvider.connectedFamily?.adminName}' : 'Not connected to a Family', style: TextStyle(color: memberProvider.isConnected ? Colors.greenAccent : Colors.white, fontWeight: FontWeight.w900)),
-                    subtitle: Text('Family Cyber Score: ${memberProvider.familyScore}/100', style: TextStyle(color: Colors.white.withOpacity(0.6))),
-                    trailing: !memberProvider.isConnected ? TextButton(onPressed: () => context.push('/user-pairing'), child: const Text('JOIN NOW')) : null,
+                    title: Text(memberProvider.isConnected ? l10n.connectedTo(memberProvider.connectedFamily?.adminName ?? 'Admin') : l10n.notConnectedToFamily, style: TextStyle(color: memberProvider.isConnected ? Colors.greenAccent : Colors.white, fontWeight: FontWeight.w900)),
+                    subtitle: Text(l10n.familyCyberScore(memberProvider.familyScore.toString()), style: TextStyle(color: Colors.white.withOpacity(0.6))),
+                    trailing: !memberProvider.isConnected ? TextButton(onPressed: () => context.push('/user-pairing'), child: Text(l10n.joinNow)) : null,
                   ),
                 ),
                 if (memberProvider.isConnected)
@@ -417,7 +422,7 @@ class DashboardScreen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () => memberProvider.sendMockHackathonAlert(),
                       icon: const Icon(Icons.bug_report_rounded),
-                      label: const Text('DEMO: SEND MOCK SCAM ALERT'),
+                      label: Text(l10n.demoSendAlert),
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent.withOpacity(0.2), foregroundColor: Colors.redAccent),
                     ),
                   ),
@@ -427,7 +432,7 @@ class DashboardScreen extends StatelessWidget {
               const UrlDefenderSection(),
               const SizedBox(height: 32),
 
-              const Text('LIVE ALERTS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 1, color: Colors.white38)),
+              Text(l10n.liveAlerts, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 1, color: Colors.white38)),
               const SizedBox(height: 16),
               
               if (smsProvider.latestMessage != null)
@@ -446,7 +451,7 @@ class DashboardScreen extends StatelessWidget {
                         Icon(Icons.radar_rounded, color: theme.primaryColor.withOpacity(0.3), size: 48),
                         const SizedBox(height: 16),
                         Text(
-                          'No threats detected recently.\nMonitoring in real-time...',
+                          l10n.noThreatsDetected,
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white.withOpacity(0.2), fontSize: 13),
                         ),
@@ -462,6 +467,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildSecurityStatusCard(BuildContext context, SmsStreamProvider provider, ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     final isActive = provider.isListening;
     return Card(
       color: isActive ? Colors.greenAccent.withOpacity(0.05) : theme.cardTheme.color,
@@ -484,7 +490,7 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isActive ? 'Shield Active' : 'Shield Inactive',
+                    isActive ? l10n.shieldActive : l10n.shieldInactive,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
@@ -493,8 +499,8 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    isActive ? 'Live scanning enabled' : 'System unprotected',
-                    style: TextStyle(color: Colors.white38, fontSize: 13),
+                    isActive ? l10n.liveScanningEnabled : l10n.systemUnprotected,
+                    style: const TextStyle(color: Colors.white38, fontSize: 13),
                   ),
                   if (!isActive)
                     Padding(
@@ -506,7 +512,7 @@ class DashboardScreen extends StatelessWidget {
                           foregroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 40),
                         ),
-                        child: const Text('Enable Now'),
+                        child: Text(l10n.enableNow),
                       ),
                     )
                 ],
@@ -562,6 +568,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
   Widget _buildRiskCard(BuildContext context, SmsStreamProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     if (provider.isAnalyzing || provider.latestAnalysis == null) {
       return Card(
         child: Padding(
@@ -570,7 +577,7 @@ class DashboardScreen extends StatelessWidget {
             children: [
               const CircularProgressIndicator(strokeWidth: 2),
               const SizedBox(height: 20),
-              Text('Analyzing threat level...', style: TextStyle(color: Colors.white.withOpacity(0.3))),
+              Text(l10n.analyzingThreatLevel, style: TextStyle(color: Colors.white.withOpacity(0.3))),
             ],
           ),
         ),

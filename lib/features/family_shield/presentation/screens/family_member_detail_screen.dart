@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../models/family_member.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class FamilyMemberDetailScreen extends StatelessWidget {
   final FamilyMember member;
@@ -12,6 +13,7 @@ class FamilyMemberDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final bool isSafe = member.safetyStatus.name == 'safe';
     final Color statusColor = isSafe ? Colors.greenAccent : Colors.redAccent;
     final String lastSyncText = DateFormat.jm().format(member.lastSync);
@@ -22,7 +24,7 @@ class FamilyMemberDetailScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: const BackButton(color: Colors.white54),
-        title: Text('NODE ANALYSIS', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1, fontSize: 16)),
+        title: Text(l10n.nodeAnalysis, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1, fontSize: 16)),
         centerTitle: true,
       ),
       body: FadeInUp(
@@ -54,7 +56,7 @@ class FamilyMemberDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'ROLE: ${member.role.toUpperCase()}',
+                '${l10n.role}: ${member.role.toUpperCase()}',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.5), letterSpacing: 2),
               ),
@@ -62,23 +64,23 @@ class FamilyMemberDetailScreen extends StatelessWidget {
 
               Row(
                 children: [
-                  Expanded(child: _buildMetric('SCORE', '${100 - member.riskScore}', Icons.score_rounded, Colors.blueAccent)),
+                  Expanded(child: _buildMetric(l10n.score, '${100 - member.riskScore}', Icons.score_rounded, Colors.blueAccent)),
                   const SizedBox(width: 16),
-                  Expanded(child: _buildMetric('ALERTS', '${member.alertsCount}', Icons.warning_rounded, Colors.orangeAccent)),
+                  Expanded(child: _buildMetric(l10n.alerts, '${member.alertsCount}', Icons.warning_rounded, Colors.orangeAccent)),
                 ],
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Expanded(child: _buildMetric('SYNCED', lastSyncText, Icons.sync_rounded, Colors.purpleAccent)),
+                  Expanded(child: _buildMetric(l10n.synced, lastSyncText, Icons.sync_rounded, Colors.purpleAccent)),
                   const SizedBox(width: 16),
-                  Expanded(child: _buildMetric('STATUS', isSafe ? 'SAFE' : 'RISK', isSafe ? Icons.check_circle : Icons.gpp_bad, statusColor)),
+                  Expanded(child: _buildMetric(l10n.status, isSafe ? l10n.filterSafe : l10n.risk, isSafe ? Icons.check_circle : Icons.gpp_bad, statusColor)),
                 ],
               ),
 
               const SizedBox(height: 48),
 
-              Text('NODE THREAT HISTORY', style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
+              Text(l10n.nodeThreatHistory, style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
               const SizedBox(height: 16),
               
               if (member.recentAlerts.isEmpty)
@@ -93,7 +95,7 @@ class FamilyMemberDetailScreen extends StatelessWidget {
                       children: [
                         Icon(Icons.verified_user_rounded, size: 48, color: Colors.greenAccent.withOpacity(0.5)),
                         const SizedBox(height: 16),
-                        Text('No associated threats on this node.', style: TextStyle(color: Colors.greenAccent.withOpacity(0.5))),
+                        Text(l10n.noNodeThreats, style: TextStyle(color: Colors.greenAccent.withOpacity(0.5))),
                       ],
                     ),
                   ),
@@ -122,7 +124,7 @@ class FamilyMemberDetailScreen extends StatelessWidget {
                             children: [
                               Text(alert.category, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                               const SizedBox(height: 4),
-                              Text('Severity: High', style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.5))),
+                              Text(l10n.severityHigh, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.5))),
                             ],
                           ),
                         ),
@@ -137,7 +139,7 @@ class FamilyMemberDetailScreen extends StatelessWidget {
                 ElevatedButton.icon(
                   onPressed: () {}, 
                   icon: const Icon(Icons.remove_circle_outline_rounded),
-                  label: const Text('DISCONNECT NODE FROM NETWORK'),
+                  label: Text(l10n.disconnectNode),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.redAccent.withOpacity(0.1),
                     foregroundColor: Colors.redAccent,

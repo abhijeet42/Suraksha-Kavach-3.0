@@ -5,6 +5,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 import 'package:suraksha_kavach/features/family_shield/providers/family_admin_provider.dart';
 import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
 import 'package:suraksha_kavach/features/family_shield/models/family_member.dart';
@@ -26,6 +27,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
   }
 
   void _showQrOverlay(BuildContext context, String payloadJson) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => FadeInUp(
@@ -41,7 +43,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
               const Icon(Icons.wifi_tethering_rounded, color: Colors.greenAccent, size: 32),
               const SizedBox(height: 8),
               Text(
-                'LAN PAIRING ACTIVE',
+                l10n.lanPairingActive,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: 2, color: Colors.white),
               ),
@@ -51,7 +53,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Tell your family member to open "Suraksha Kavach" -> "User Panel" and scan this encrypted node key.',
+                l10n.scanEncryptedNodeDesc,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.6), height: 1.5),
               ),
@@ -82,7 +84,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
             Center(
               child: TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('DISMISS NODE', style: TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1, color: Colors.white54)),
+                child: Text(l10n.dismissNode, style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1, color: Colors.white54)),
               ),
             ),
           ],
@@ -95,10 +97,10 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
-          children: const [
-            Icon(Icons.warning_rounded, color: Colors.white),
-            SizedBox(width: 12),
-            Expanded(child: Text("Emergency lock signal broadcasted to all active nodes!")),
+          children: [
+            const Icon(Icons.warning_rounded, color: Colors.white),
+            const SizedBox(width: 12),
+            Expanded(child: Text(AppLocalizations.of(context)!.emergencyLockBroadcasted)),
           ],
         ),
         backgroundColor: Colors.redAccent.shade700,
@@ -111,10 +113,10 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
-          children: const [
-            Icon(Icons.security_rounded, color: Colors.white),
-            SizedBox(width: 12),
-            Expanded(child: Text("SAFETY REMINDER: Family Network Health is below 50%. Focus on increasing security!")),
+          children: [
+            const Icon(Icons.security_rounded, color: Colors.white),
+            const SizedBox(width: 12),
+            Expanded(child: Text(AppLocalizations.of(context)!.safetyReminderDesc)),
           ],
         ),
         backgroundColor: Colors.orangeAccent.shade700,
@@ -159,7 +161,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text('SHIELD COMMAND', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1)),
+        title: Text(AppLocalizations.of(context)!.shieldCommand, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1)),
         actions: [
           Container(
             margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -173,7 +175,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
               children: [
                 Icon(Icons.circle, size: 8, color: adminProvider.isServerRunning ? Colors.greenAccent : Colors.redAccent),
                 const SizedBox(width: 6),
-                Text(adminProvider.isServerRunning ? 'NODE ONLINE' : 'OFFLINE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: adminProvider.isServerRunning ? Colors.greenAccent : Colors.redAccent)),
+                Text(adminProvider.isServerRunning ? AppLocalizations.of(context)!.nodeOnline : AppLocalizations.of(context)!.offline, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: adminProvider.isServerRunning ? Colors.greenAccent : Colors.redAccent)),
               ],
             ),
           )
@@ -205,7 +207,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                         children: [
                           Expanded(
                             child: _buildActionButton(
-                              title: 'ADD MEMBER NODE',
+                              title: AppLocalizations.of(context)!.addMemberNode,
                               icon: Icons.qr_code_scanner_rounded,
                               color: Colors.amber,
                               onTap: () {
@@ -222,7 +224,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                           const SizedBox(width: 16),
                           Expanded(
                             child: _buildActionButton(
-                              title: 'EMERGENCY LOCK',
+                              title: AppLocalizations.of(context)!.emergencyLock,
                               icon: Icons.lock_person_rounded,
                               color: Colors.redAccent.shade400,
                               onTap: _triggerEmergencyBroadcast,
@@ -235,7 +237,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                         children: [
                           Expanded(
                             child: _buildActionButton(
-                              title: 'DEEP SCAN NETWORK',
+                              title: AppLocalizations.of(context)!.deepScanNetwork,
                               icon: Icons.radar_rounded,
                               color: Colors.cyanAccent.shade400,
                               onTap: () => _runDeepNetworkScan(context, adminProvider),
@@ -248,11 +250,11 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                       // Quick Stats
                       Row(
                         children: [
-                          Expanded(child: _buildInsightCard('Active Nodes', '${adminProvider.members.length}', Icons.device_hub_rounded, Colors.blueAccent)),
+                          Expanded(child: _buildInsightCard(AppLocalizations.of(context)!.activeNodes, '${adminProvider.members.length}', Icons.device_hub_rounded, Colors.blueAccent)),
                           const SizedBox(width: 12),
-                          Expanded(child: _buildInsightCard('Total Blocked', '$totalBlocked', Icons.shield_rounded, Colors.greenAccent)),
+                          Expanded(child: _buildInsightCard(AppLocalizations.of(context)!.scamsBlocked, '$totalBlocked', Icons.shield_rounded, Colors.greenAccent)),
                           const SizedBox(width: 12),
-                          Expanded(child: _buildInsightCard('Top Target', mostTargeted.split(' ').first, Icons.my_location_rounded, Colors.orangeAccent)),
+                          Expanded(child: _buildInsightCard(AppLocalizations.of(context)!.topTarget, mostTargeted.split(' ').first, Icons.my_location_rounded, Colors.orangeAccent)),
                         ],
                       ),
                     ],
@@ -267,7 +269,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text('GLOBAL TELEMETRY', style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
+                      Text(AppLocalizations.of(context)!.globalTelemetry, style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(24),
@@ -280,7 +282,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                             ? Center(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 20),
-                                  child: Text('Establish node connections to activate telemetry array.', textAlign: TextAlign.center, style: TextStyle(color: Colors.white.withOpacity(0.3), fontStyle: FontStyle.italic)),
+                                  child: Text(AppLocalizations.of(context)!.establishConnectionsDesc, textAlign: TextAlign.center, style: TextStyle(color: Colors.white.withOpacity(0.3), fontStyle: FontStyle.italic)),
                                 ),
                               )
                             : Column(
@@ -288,8 +290,8 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('Network Security Load', style: TextStyle(color: Colors.white.withOpacity(0.5))),
-                                      const Text('OPTIMAL', style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold)),
+                                      Text(AppLocalizations.of(context)!.networkSecurityLoad, style: TextStyle(color: Colors.white.withOpacity(0.5))),
+                                      Text(AppLocalizations.of(context)!.optimal, style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   const SizedBox(height: 16),
@@ -304,8 +306,8 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('Scam/Phishing Volume', style: TextStyle(color: Colors.white.withOpacity(0.5))),
-                                      const Text('LOW', style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold)),
+                                      Text(AppLocalizations.of(context)!.scamPhishingVolume, style: TextStyle(color: Colors.white.withOpacity(0.5))),
+                                      Text(AppLocalizations.of(context)!.optimal, style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   const SizedBox(height: 16),
@@ -330,7 +332,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
-                      Text('NETWORK NODES', style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
+                      Text(AppLocalizations.of(context)!.networkNodes, style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
                       const Spacer(),
                       Icon(Icons.edit_rounded, size: 16, color: Colors.white.withOpacity(0.3)),
                     ],
@@ -367,7 +369,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                                   child: const Icon(Icons.add_rounded, color: Colors.white54),
                                 ),
                                 const SizedBox(height: 12),
-                                const Text('Add Node', style: TextStyle(color: Colors.white54, fontWeight: FontWeight.w600)),
+                                Text(AppLocalizations.of(context)!.addNode, style: const TextStyle(color: Colors.white54, fontWeight: FontWeight.w600)),
                               ],
                             ),
                           ),
@@ -383,7 +385,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                 // 4. Live Global Feed
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text('LIVE THREAT INTELLIGENCE FEED', style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
+                  child: Text(AppLocalizations.of(context)!.liveThreatFeed, style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.white54)),
                 ),
                 const SizedBox(height: 16),
                 _buildLiveFeed(adminProvider),
@@ -419,11 +421,11 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
               onPressed: () {
                 context.read<FamilyAdminProvider>().resetRiskScores();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Network Risk Scores Reset'), behavior: SnackBarBehavior.floating),
+                  SnackBar(content: Text(AppLocalizations.of(context)!.networkRiskScoresReset), behavior: SnackBarBehavior.floating),
                 );
               },
               icon: Icon(Icons.refresh_rounded, color: Colors.white.withOpacity(0.3), size: 20),
-              tooltip: 'Reset Scores',
+              tooltip: AppLocalizations.of(context)!.resetScores,
             ),
           ),
           Column(
@@ -449,7 +451,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                         '$score',
                         style: GoogleFonts.outfit(fontSize: 56, fontWeight: FontWeight.w900, color: Colors.white, height: 1.0),
                       ),
-                      Text('OUT OF 100', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.4), letterSpacing: 2)),
+                      Text(AppLocalizations.of(context)!.outOf100, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.4), letterSpacing: 2)),
                     ],
                   )
                 ],
@@ -461,7 +463,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                   Icon(Icons.health_and_safety_rounded, color: scoreColor, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'NETWORK HEALTH: ${score > 80 ? "OPTIMAL" : (score > 50 ? "WARNING" : "CRITICAL")}',
+                    '${AppLocalizations.of(context)!.networkHealth}: ${score > 80 ? AppLocalizations.of(context)!.optimal : (score > 50 ? AppLocalizations.of(context)!.warning : AppLocalizations.of(context)!.critical)}',
                     style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w900, color: scoreColor, letterSpacing: 1.5),
                   ),
                 ],
@@ -659,10 +661,10 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
             const SizedBox(height: 20),
             const CircularProgressIndicator(color: Colors.cyanAccent),
             const SizedBox(height: 32),
-            Text('ANALYZING NETWORK NODES...',
+            Text(AppLocalizations.of(context)!.analyzingNetworkNodes,
                 style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.cyanAccent)),
             const SizedBox(height: 8),
-            Text('Evaluating cross-device threat vectors',
+            Text(AppLocalizations.of(context)!.evaluatingThreatVectors,
                 style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
             const SizedBox(height: 20),
           ],
@@ -698,23 +700,23 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
             children: [
               const Icon(Icons.analytics_rounded, color: Colors.cyanAccent),
               const SizedBox(width: 12),
-              Text('NETWORK AUDIT REPORT', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1)),
+              Text(AppLocalizations.of(context)!.networkAuditReport, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1)),
             ],
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildReportRow('Global Health Index', '$score%', score > 50 ? Colors.greenAccent : Colors.redAccent),
+              _buildReportRow(AppLocalizations.of(context)!.globalHealthIndex, '$score%', score > 50 ? Colors.greenAccent : Colors.redAccent),
               const Divider(height: 32, color: Colors.white10),
-              _buildReportRow('Secure Nodes', '$safeMembers', Colors.greenAccent),
-              _buildReportRow('Warning Nodes', '$warningMembers', Colors.orangeAccent),
-              _buildReportRow('Critical Nodes', '$criticalMembers', Colors.redAccent),
+              _buildReportRow(AppLocalizations.of(context)!.secureNodes, '$safeMembers', Colors.greenAccent),
+              _buildReportRow(AppLocalizations.of(context)!.warningNodes, '$warningMembers', Colors.orangeAccent),
+              _buildReportRow(AppLocalizations.of(context)!.criticalNodes, '$criticalMembers', Colors.redAccent),
               const SizedBox(height: 24),
               Text(
                 score > 80
-                    ? 'Your family perimeter is secure. No action required.'
-                    : 'Vulnerabilities detected. Review "Critical Nodes" history immediately.',
+                    ? AppLocalizations.of(context)!.perimeterSecure
+                    : AppLocalizations.of(context)!.vulnerabilitiesDetected,
                 style: TextStyle(color: Colors.white.withOpacity(0.6), height: 1.5, fontSize: 13),
               ),
             ],
@@ -723,7 +725,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
             Center(
               child: TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('ACKNOWLEDGE', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.cyanAccent)),
+                child: Text(AppLocalizations.of(context)!.acknowledge, style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.cyanAccent)),
               ),
             ),
           ],

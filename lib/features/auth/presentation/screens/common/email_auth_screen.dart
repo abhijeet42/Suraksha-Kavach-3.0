@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class EmailAuthScreen extends StatefulWidget {
   final bool isAdmin;
@@ -19,7 +20,7 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
   void _onNext() async {
     if (_emailController.text.isEmpty || !_emailController.text.contains('@')) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid email address')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.invalidEmailError)),
       );
       return;
     }
@@ -37,8 +38,9 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('EMAIL AUTHENTICATION')),
+      appBar: AppBar(title: Text(l10n.emailAddress.toUpperCase())),
       body: FadeIn(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -49,30 +51,30 @@ class _EmailAuthScreenState extends State<EmailAuthScreen> {
               const Icon(Icons.alternate_email_rounded, size: 80, color: Colors.purpleAccent),
               const SizedBox(height: 32),
               Text(
-                'ENTER EMAIL',
+                l10n.enterEmail,
                 style: GoogleFonts.outfit(fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 1),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
-              const Text(
-                'We will send a secure verification code to your inbox.',
+              Text(
+                l10n.emailVerificationDesc,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white38),
+                style: const TextStyle(color: Colors.white38),
               ),
               const SizedBox(height: 48),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'EMAIL ADDRESS',
-                  prefixIcon: Icon(Icons.email_outlined),
+                decoration: InputDecoration(
+                  labelText: l10n.emailAddress,
+                  prefixIcon: const Icon(Icons.email_outlined),
                 ),
               ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _onNext,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.purpleAccent),
-                child: const Text('GET VERIFICATION CODE'),
+                child: Text(l10n.getVerificationCode),
               ),
             ],
           ),

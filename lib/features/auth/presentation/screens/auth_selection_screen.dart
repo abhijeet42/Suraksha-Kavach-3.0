@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class AuthSelectionScreen extends StatefulWidget {
   final bool isAdmin;
@@ -25,7 +26,8 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final title = widget.isAdmin ? 'Admin Portal' : 'User Portal';
+    final l10n = AppLocalizations.of(context)!;
+    final title = widget.isAdmin ? l10n.adminPortal : l10n.userPortal;
 
     return Scaffold(
       appBar: AppBar(title: Text(title.toUpperCase())),
@@ -38,17 +40,17 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
             children: [
               const SizedBox(height: 40),
               Text(
-                _showMethods ? 'CHOOSE METHOD' : (_type == 'login' ? 'WELCOME BACK' : 'GET STARTED'),
+                _showMethods ? l10n.chooseMethod : (_type == 'login' ? l10n.welcomeBack : l10n.getStarted),
                 style: GoogleFonts.outfit(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: 1),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
               Text(
                 _showMethods 
-                  ? 'How would you like to verify your identity?'
+                  ? l10n.howToVerify
                   : (widget.isAdmin 
-                      ? 'Secure access to your family guard command center.'
-                      : 'Join your family network for real-time protection.'),
+                      ? l10n.adminAuthDesc
+                      : l10n.userAuthDesc),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white.withOpacity(0.5)),
               ),
@@ -56,32 +58,32 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
 
               if (!_showMethods) ...[
                 _buildOptionCard(
-                  title: 'LOG IN',
-                  subtitle: 'Access your existing account securely.',
+                  title: l10n.login,
+                  subtitle: l10n.loginDesc,
                   icon: Icons.login_rounded,
                   color: Colors.amber,
                   onTap: () => _selectType('login'),
                 ),
                 const SizedBox(height: 20),
                 _buildOptionCard(
-                  title: 'REGISTER',
-                  subtitle: 'Create a new security node for your family.',
+                  title: l10n.register,
+                  subtitle: l10n.registerDesc,
                   icon: Icons.app_registration_rounded,
                   color: Colors.greenAccent,
                   onTap: () => _selectType('register'),
                 ),
               ] else ...[
                 _buildOptionCard(
-                  title: 'PHONE NUMBER',
-                  subtitle: 'Verify using a secure SMS OTP code.',
+                  title: l10n.phoneNumber,
+                  subtitle: l10n.phoneDesc,
                   icon: Icons.phone_android_rounded,
                   color: Colors.blueAccent,
                   onTap: () => context.push(widget.isAdmin ? '/admin-auth' : '/user-auth'),
                 ),
                 const SizedBox(height: 20),
                 _buildOptionCard(
-                  title: 'EMAIL ADDRESS',
-                  subtitle: 'Secure authentication via email verification.',
+                  title: l10n.emailAddress,
+                  subtitle: l10n.emailDesc,
                   icon: Icons.email_rounded,
                   color: Colors.purpleAccent,
                   onTap: () => context.push('/email-auth?isAdmin=${widget.isAdmin}'),
@@ -89,7 +91,7 @@ class _AuthSelectionScreenState extends State<AuthSelectionScreen> {
                 const Spacer(),
                 TextButton(
                   onPressed: () => setState(() => _showMethods = false),
-                  child: const Text('GO BACK', style: TextStyle(color: Colors.white24, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                  child: Text(l10n.goBack, style: const TextStyle(color: Colors.white24, fontWeight: FontWeight.bold, letterSpacing: 1)),
                 ),
               ],
             ],

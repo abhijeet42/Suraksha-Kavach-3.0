@@ -10,6 +10,9 @@ import 'features/family_shield/providers/family_member_provider.dart';
 import 'core/database/hive_service.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/services/notification_service.dart';
+import 'core/localization/locale_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +24,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => FamilyAdminProvider()),
         ChangeNotifierProvider(create: (_) => FamilyMemberProvider()),
@@ -41,6 +45,7 @@ class SurakshaKavachApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
     final router = AppRouter.router(context);
 
     return MaterialApp.router(
@@ -48,6 +53,17 @@ class SurakshaKavachApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData,
       routerConfig: router,
+      locale: localeProvider.locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('hi'),
+      ],
     );
   }
 }

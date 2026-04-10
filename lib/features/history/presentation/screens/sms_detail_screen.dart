@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../data/models/saved_sms_record.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class SmsDetailScreen extends StatelessWidget {
   final SavedSmsRecord record;
@@ -13,11 +14,12 @@ class SmsDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat('MMMM dd, yyyy • HH:mm:ss');
     final date = DateTime.fromMillisecondsSinceEpoch(record.timestamp);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('THREAT ANALYSIS'),
+        title: Text(l10n.threatAnalysis),
       ),
       body: FadeIn(
         duration: const Duration(milliseconds: 600),
@@ -55,7 +57,7 @@ class SmsDetailScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          '${record.score.toInt()}% RISK SCORE',
+                          l10n.riskScore(record.score.toInt().toString()),
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             color: record.riskLevel.color,
@@ -69,13 +71,13 @@ class SmsDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               
-              _buildMetaSection(theme, 'SENDER ORIGIN', record.sender),
+              _buildMetaSection(theme, l10n.senderOrigin, record.sender),
               const SizedBox(height: 32),
-              _buildMetaSection(theme, 'TIME RECEIVED', dateFormat.format(date).toUpperCase()),
+              _buildMetaSection(theme, l10n.timeReceived, dateFormat.format(date).toUpperCase()),
               const SizedBox(height: 32),
 
               Text(
-                'MESSAGE BODY',
+                l10n.messageBody,
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w900,
@@ -99,7 +101,7 @@ class SmsDetailScreen extends StatelessWidget {
               const SizedBox(height: 40),
 
               Text(
-                'AI INTELLIGENCE FLAGS',
+                l10n.aiIntelligenceFlags,
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w900,
@@ -133,7 +135,7 @@ class SmsDetailScreen extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.report_gmailerrorred_rounded, size: 20),
-                label: const Text('REPORT TO DATABASE'),
+                label: Text(l10n.reportToDatabase),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
@@ -143,7 +145,7 @@ class SmsDetailScreen extends StatelessWidget {
               TextButton.icon(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.delete_outline_rounded, size: 20, color: Colors.redAccent),
-                label: const Text('DELETE FROM HISTORY', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w800)),
+                label: Text(l10n.deleteFromHistory, style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w800)),
               ),
               const SizedBox(height: 48),
             ],

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
   final bool isAdmin;
@@ -65,7 +66,8 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final authProvider = context.watch<AuthProvider>();
-    final title = widget.isAdmin ? "ADMIN PORTAL" : "MEMBER PORTAL";
+    final l10n = AppLocalizations.of(context)!;
+    final title = widget.isAdmin ? l10n.adminPortal : l10n.userPortal;
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -78,7 +80,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
             children: [
               const SizedBox(height: 40),
               Text(
-                _isSignUp ? 'SECURE ACCOUNT' : 'SYSTEM LOGIN',
+                _isSignUp ? l10n.secureAccount : l10n.systemLogin,
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w900,
                   fontSize: 24,
@@ -87,7 +89,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Enter your phone number to receive a secure access token.',
+                l10n.enterPhone,
                 style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 14),
               ),
               const SizedBox(height: 48),
@@ -97,7 +99,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                 keyboardType: TextInputType.phone,
                 style: const TextStyle(fontSize: 18, letterSpacing: 2, fontWeight: FontWeight.bold),
                 decoration: InputDecoration(
-                  labelText: 'PHONE NUMBER',
+                  labelText: l10n.phoneNumber,
                   labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1),
                   prefixIcon: const Icon(Icons.phone_iphone_rounded),
                   hintText: '+91 00000 00000',
@@ -111,7 +113,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                 onPressed: authProvider.isLoading ? null : _sendOtp,
                 child: authProvider.isLoading 
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('GET SECURE OTP'),
+                  : Text(l10n.getOtp),
               ),
               
               const SizedBox(height: 24),
@@ -120,7 +122,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                 child: TextButton(
                   onPressed: () => setState(() => _isSignUp = !_isSignUp),
                   child: Text(
-                    _isSignUp ? 'ALREADY REGISTERED? LOGIN' : 'NEW ADMIN? CREATE ACCOUNT',
+                    _isSignUp ? l10n.alreadyRegistered : l10n.newAdmin,
                     style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 0.5),
                   ),
                 ),

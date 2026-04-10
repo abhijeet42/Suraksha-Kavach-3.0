@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
@@ -8,6 +9,7 @@ class RoleSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: FadeIn(
@@ -31,22 +33,22 @@ class RoleSelectionScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Welcome to Suraksha Kavach',
+                  l10n.welcomeToApp,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Choose your entry point to the secure ecosystem.',
+                Text(
+                  l10n.chooseEntryPoint,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 60),
                 
                 _buildRoleCard(
                   context,
-                  title: 'Admin Panel',
-                  subtitle: 'Create a family group, generate invite codes, and monitor family safety.',
+                  title: l10n.adminPanel,
+                  subtitle: l10n.adminPanelDesc,
                   icon: Icons.admin_panel_settings,
                   color: Colors.amber,
                   onTap: () => context.push('/auth-selection', extra: {'isAdmin': true}),
@@ -56,8 +58,8 @@ class RoleSelectionScreen extends StatelessWidget {
                 
                 _buildRoleCard(
                   context,
-                  title: 'User Panel',
-                  subtitle: 'Join a family group and protect your device from phishing scams.',
+                  title: l10n.userPanel,
+                  subtitle: l10n.userPanelDesc,
                   icon: Icons.person_add_alt_1,
                   color: Colors.blueAccent,
                   onTap: () => context.push('/user-pairing'),
