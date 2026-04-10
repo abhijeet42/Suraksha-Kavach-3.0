@@ -39,6 +39,16 @@
 
 ---
 
+## 🧠 AI Model Integration
+
+Suraksha Kavach utilizes advanced, on-device machine learning to accurately identify scam and phishing messages without compromising user privacy.
+
+*   **Model Name**: DistilBERT-based SMS Fraud Detection Model (`sms_fraud_model_quantized.tflite`)
+*   **Architecture**: Quantized DistilBERT Transformer running via TensorFlow Lite Mobile Inference.
+*   **Description**: The application features a locally embedded Language Model trained specifically on a 3-class system (Safe, Suspicious, Spam/Fraud) to analyze SMS text semantics. Since the inference pipeline runs entirely on-device, it achieves zero-latency threat detection while ensuring that your private messages are never uploaded to any external server.
+
+---
+
 ## 🚀 How to Run the Demo
 
 To demonstrate the real-time syncing between two devices (e.g., Admin and Member):
