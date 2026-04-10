@@ -1,108 +1,86 @@
 <div align="center">
   <img src="./assets/images/logo.png" width="220" height="220" alt="Suraksha Kavach Logo">
-  <h1>SURAKSHA KAVACH 🛡️</h1>
+  
+  <h1>🛡️ SURAKSHA KAVACH 3.0</h1>
   <p><b>A Sovereign, Zero-Cloud LAN Shield for Family Cyber-Defense</b></p>
 
-  [![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev)
-  [![Shelf](https://img.shields.io/badge/Backend-Shelf_LAN_Server-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)](https://pub.dev/packages/shelf)
-  [![Provider](https://img.shields.io/badge/State--Management-Provider-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)](https://pub.dev/packages/provider)
-  [![Privacy](https://img.shields.io/badge/Privacy-Zero--Cloud-%234CAF50.svg?style=for-the-badge&logo=shieldui&logoColor=white)](#)
+  [![Flutter](https://img.shields.io/badge/Flutter-3.x-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev)
+  [![TensorFlow Lite](https://img.shields.io/badge/TFLite-On--Device_AI-%23FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](#)
+  [![Zero-Cloud Privacy](https://img.shields.io/badge/Privacy-100%25_Local_Network-%234CAF50?style=for-the-badge&logo=shieldui&logoColor=white)](#)
 </div>
 
----
+<br>
 
-## 🔒 Project Overview
+## 🔐 Project Philosophy & Architecture
 
-**Suraksha Kavach** is an advanced, "Cyber-Elite" aesthetic application designed to protect families from SMS scams, phishing (smishing), and digital fraud. Unlike traditional apps that rely on intrusive cloud uploads, Suraksha Kavach uses a **Local Area Network (LAN) Peer-to-Peer architecture** to keep all data strictly within your home or immediate Wi-Fi vicinity.
+**Suraksha Kavach** (Hindi for *Security Shield*) is an elite-tier cyber defense application engineered to protect vulnerable demographics (especially seniors and teenagers) from SMS scams, phishing links, and digital fraud infrastructure.
 
-> [!IMPORTANT]
-> **Zero-Cloud Architecture**: Your family's SMS data never hits a central server. All synchronization between Members and the Admin happens over encrypted local HTTP tunnels.
-
----
-
-## ✨ Advanced "Family Shield" Features
-
-### 🏢 Command Center (Admin Dashboard)
-*   **Family Cyber Score**: A real-time, dynamic health gauge measuring the collective security status of all connected nodes.
-*   **Global Telemetry Array**: Visual tracking of network security load and phishing volumes across the family mesh.
-*   **Live Threat Intelligence**: A chronological feed of intercepted threats, identifying the "Top Target" in the family.
-*   **Emergency Lockdown**: One-tap broadcast to send emergency signals to all active family nodes.
-
-### 📱 Member Protection (Node View)
-*   **Silent Monitoring**: Members are protected by a background heuristic engine that flags scam messages instantly.
-*   **Real-time Alert Sync**: Detected threats are instantly pushed to the Guardian's dashboard over the local Wi-Fi.
-*   **Zero-Knowledge Transfers**: Only threat metadata (category, risk level, timestamp) is shared—raw private message content never leaves the member's device.
-
-### 🧓 Elderly Shield Mode (Accessibility)
-*   **High-Contrast Simplified UI**: A specialized dashboard stripped of complex telemetry, offering large typography, simplified warnings, and clear action buttons (Call Helpline/Ask Family).
-*   **Synchronized Voice Alerts**: Features a deeply integrated Text-To-Speech (`flutter_tts`) engine that automatically speaks incoming SMS safety verdicts out loud entirely without UI race-conditions.
-*   **Dynamic Language Synthesis**: Fully integrated with Flutter's `.arb` localizations. Switching the app to Hindi instantly translates the entire UI *and* sets the voice engine to synthesize native Hindi (`hi-IN`).
-
-### 🌐 Global Threat Reporting & Collaboration
-*   **Community Threat Pool**: Members can actively report verified scam messages and phone numbers to a centralized Firebase Cloud Firestore repository.
-*   **Threat Provider Syncing**: Pulls live global cyber-threat metrics, ensuring the local on-device intelligence is bolstered by real-world community reports.
-
-### 📶 Bulletproof LAN Syncing
-*   **QR-Node Pairing**: Admin generates a dynamic QR containing their local IP and encrypted Family ID for instant pairing.
-*   **Automatic Handshake**: Includes multi-interface IP detection to ensure connectivity even behind restrictive routers or on emulators.
+Unlike conventional antivirus applications that secretly harvest your private messages to cloud endpoints, **Suraksha Kavach operates on a sovereign, Zero-Cloud Local Area Network (LAN) mesh.** Every phone in your family securely binds to a single local Admin Node (e.g., the tech-savvy child's phone) entirely through encrypted UDP/HTTP tunnels over your local Wi-Fi. Personal data never leaves the house.
 
 ---
 
-## 🧠 AI Model Integration
+## ✨ Core Elite Features
 
-Suraksha Kavach utilizes advanced, on-device machine learning to accurately identify scam and phishing messages without compromising user privacy.
+### 🧓 1. Senior Shield (Elderly Accessibility Mode)
+Designed purely for digital accessibility and cognitive ease.
+* **Simplified High-Contrast UI:** Removes complex telemetry graphs in favor of a large, visually absolute status (Safe / Dangerous).
+* **Automatic Native Voice Alerts:** A deeply integrated Text-To-Speech (`flutter_tts`) engine securely tied to the UI frame lifecycle perfectly speaks the AI's safety verdicts out loud the exact millisecond a message is processed. 
+* **Dynamic Bilingual Synthesis:** Fully supports Hindi (`hi-IN`) and English. If the phone is set to Hindi via the Settings tab, the App translates flawlessly *and* the Voice Alert engine dynamically swaps syntax arrays to speak native Hindi.
+* **Panic Triggers:** Contains oversized 1-tap buttons to immediately ping the Admin child or call the National Cyber Helpline (1930).
 
-*   **Model Name**: DistilBERT-based SMS Fraud Detection Model (`sms_fraud_model_quantized.tflite`)
-*   **Architecture**: Quantized DistilBERT Transformer running via TensorFlow Lite Mobile Inference.
-*   **Description**: The application features a locally embedded Language Model trained specifically on a 3-class system (Safe, Suspicious, Spam/Fraud) to analyze SMS text semantics. Since the inference pipeline runs entirely on-device, it achieves zero-latency threat detection while ensuring that your private messages are never uploaded to any external server.
+### 🧠 2. On-Device AI Threat Engine
+Achieves zero-latency inference completely offline. 
+* **Model Pipeline:** Powered by a Quantized DistilBERT Transformer (`sms_fraud_model_quantized.tflite`).
+* **Semantic Vectoring:** Understands the *intent* of an SMS instead of just matching rigid keywords—sniffing out urgency manipulation, fake bank alerts, and malicious short-links.
+
+### 🏢 3. Command Node (Admin Cyber Center)
+The ultimate bird's-eye view of your household's digital surface area.
+* **Family Cyber Score:** A live algorithmic health gauge computing the defensive posture of all connected nodes.
+* **Live Threat Intelligence Feed:** Intercepts and logs real-time scam attempts against any connected family member, mapping the exact threat category and risk scale.
+* **Emergency Lockdown Broadcast:** Push emergency alerts to all family devices instantly if a coordinated phishing attack strikes.
+
+### 🌐 4. Cloud Collaborative Threat Reporting
+While purely localized by default, users can opt-in to combat scammers globally.
+* **Firestore Verification System:** Members can actively identify, flag, and report sophisticated scam numbers/links up to a centralized Firebase Cloud Firestore repository.
+* **Global Pooling:** This community verification safely strengthens global detection signatures over time without compromising private SMS content.
+
+### 📶 5. Bulletproof Local Syncing
+* **QR Handshake:** Seamlessly binds nodes bypassing confusing IP architectures simply by generating an encrypted Node QR Code.
+* **Sovereign Transfer:** Uses raw Flutter `shelf` REST routes locally so threat metadata executes across the room safely and privately.
 
 ---
 
-## 🚀 How to Run the Demo
+## 🚀 Getting Started & Deployment
 
-To demonstrate the real-time syncing between two devices (e.g., Admin and Member):
+To execute the application and witness the LAN mesh in real life, you will need two standard Android devices connected to the same Wi-Fi layer.
 
-### 1. Networking Setup (Crucial)
 > [!TIP]
-> For the best demo experience, turn on a **Mobile Hotspot** on the Admin device and connect the Member device to it. This bypasses "Client Isolation" found on public/office Wi-Fi networks.
+> **Pro-Tip for Corporate / Hackathon Wi-Fi:** Many public Wi-Fi networks enable 'Client Isolation' preventing devices from seeing each other. Turn on a **Mobile Hotspot** on Device A, and connect Device B to it to bypass this entirely!
 
-### 2. Admin Flow
-1. Open the app -> Select **Admin Panel**.
-2. Go to the **Family Shield** tab.
-3. Tap **"GENERATE INVITE QR"**. The local node server will boot on port 8080.
+### 📡 Setting up the Admin Node (Device 1)
+1. Launch **Suraksha Kavach** and click **Admin Panel**.
+2. Navigate to the **Family Shield** Tab.
+3. Tap **GENERATE INVITE QR**. This initiates an invisible, lightweight `shelf` server operating on port `:8080`.
 
-### 3. Member Flow
-1. Open the app on a second device -> Select **User Panel**.
-2. Tap **"Scan Admin QR"** and scan the Admin's screen.
-3. Once connected, tap **"DEMO: SEND MOCK SCAM ALERT"** on the Member's dashboard.
-4. Watch the Admin's dashboard update **instantly** with the new threat log and a drop in the Cyber Score.
-
----
-
-## 🛠️ Technical Stack
-
-| Layer | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Client** | Flutter (Dart) | Cross-platform high-fidelity UI |
-| **Local Server** | Shelf / Shelf Router | Lightweight HTTP node for Admin device |
-| **State** | Provider | Reactive UI updates across nodes |
-| **Scanning** | Mobile Scanner | QR detection for node-to-node pairing |
-| **Localization** | flutter_localizations | Dynamic dual-language (Hindi/English) .arb pipeline |
-| **Accessibility** | flutter_tts | Automatic text-to-speech for seniors |
-| **Cloud Sync** | cloud_firestore | Aggregating verified community threat reports |
-| **Aesthetics** | Animate Do / Google Fonts | Premium visual system |
-| **Network** | Network Info Plus | Dynamic IPv4 resolution for LAN |
+### 📱 Connecting the Member Node (Device 2)
+1. Launch the app and click **User Panel**.
+2. Select **Scan Admin QR** and point the camera at Device 1.
+3. Once the handshake verifies, hit the **DEMO: SEND MOCK SCAM ALERT** button in the dashboard.
+4. **Watch the magic:** Device 1's Admin Cyber Score will drop in absolute real-time as the threat packet safely traverses your local airwaves!
 
 ---
 
-## 🛡️ Privacy Manifesto
-We believe privacy is a human right. Suraksha Kavach is designed to be **Cloud-Agnostic**.
-- **No** central database of your messages.
-- **No** tracking of your family's location.
-- **No** data harvesting.
-Just pure, decentralized protection.
+## 🛠️ Complete Technical Infrastructure
+
+| Framework / Tool | Architecture Layer | Integration Purpose |
+|------------------|--------------------|---------------------|
+| **Flutter (Dart)** | Client Layer | Unified, 120hz cross-platform visual synthesis. |
+| **TensorFlow Lite**| AI Engine | Asynchronous, offline DistilBERT NLP inference. |
+| **Shelf / Http** | Local Networking | Peer-To-Peer REST API bound to local IP vectors. |
+| **Cloud Firestore**| External Services| Opt-in global reporting & collaboration pool. |
+| **Provider** | State Management | Deeply nested, reactive variable passing. |
+| **Flutter TTS** | Accessibility | Automatic, native dual-language speech parsing. |
+| **Go Router** | Deep Linking | Stateful widget tracking for absolute stability. |
 
 ---
-<div align="center">
-  *Suraksha Kavach: Decentralized Defense for the Modern Family* 🇮🇳
-</div>
+*Developed proudly to democratize digital safety across generations.* 🛡️🇮🇳
