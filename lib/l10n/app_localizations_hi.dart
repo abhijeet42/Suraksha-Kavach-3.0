@@ -687,4 +687,86 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get familyMember => 'फैमिली सदस्य';
+
+  @override
+  String get elderlyHelpSent => 'आपके परिवार को सहायता अनुरोध भेज दिया गया है!';
+
+  @override
+  String get elderlyFamilyNotConnected => 'परिवार से नहीं जुड़े हैं';
+
+  @override
+  String get elderlyNotConnectedDesc =>
+      'आप अभी तक परिवार के किसी सदस्य से नहीं जुड़े हैं।\nक्या आप इसके बजाय आपातकालीन हेल्पलाइन पर कॉल करना चाहेंगे?';
+
+  @override
+  String get elderlyCancel => 'रद्द करें';
+
+  @override
+  String get elderlyCallHelpline => '1930 पर कॉल करें';
+
+  @override
+  String get elderlyHello => 'नमस्ते!';
+
+  @override
+  String get elderlyDailySummaryText => 'पेश है आपका दैनिक सुरक्षा सारांश।';
+
+  @override
+  String get elderlyPhoneSafe => 'आपका फोन आज सुरक्षित है!';
+
+  @override
+  String get elderlyBeCareful => 'आज सावधान रहें!';
+
+  @override
+  String get elderlySafeBody =>
+      'कोई खतरनाक संदेश नहीं मिला। आपका सीनियर शील्ड अच्छी तरह काम कर रहा है।';
+
+  @override
+  String elderlyDangerBody(Object count) {
+    return 'हमने आपके लिए $count संदिग्ध संदेशों को ब्लॉक किया है। अज्ञात लिंक पर क्लिक न करें।';
+  }
+
+  @override
+  String get elderlyAskFamilyForHelp => 'परिवार से मदद मांगें';
+
+  @override
+  String get elderlyCallCyberHelpline => 'साइबर हेल्पलाइन 1930 पर कॉल करें';
+
+  @override
+  String get elderlyLatestSafetyCheck => 'नवीनतम सुरक्षा जांच';
+
+  @override
+  String get elderlyDangerousVerdict =>
+      'खतरनाक — किसी भी लिंक पर क्लिक न करें!';
+
+  @override
+  String get elderlySafeVerdict => 'सुरक्षित — यह संदेश ठीक लगता है।';
+
+  @override
+  String elderlyReadingAloud(Object verdict) {
+    return 'बोलकर सुनाया जा रहा है: $verdict';
+  }
+
+  @override
+  String elderlyFromSender(Object sender) {
+    return 'प्रेषक: $sender';
+  }
+
+  @override
+  String get elderlyNoMessages =>
+      'अभी तक किसी संदेश को स्कैन नहीं किया गया है।\nआपका शील्ड निगरानी कर रहा है!';
+
+  @override
+  String get navHome => 'होम';
+
+  @override
+  String get navHistory => 'इतिहास';
+
+  @override
+  String get navFamily => 'परिवार';
+
+  @override
+  String get navReport => 'रिपोर्ट';
+
+  @override
+  String get navSettings => 'सेटिंग्स';
 }

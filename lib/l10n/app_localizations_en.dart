@@ -687,4 +687,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get familyMember => 'Family Member';
+
+  @override
+  String get elderlyHelpSent => 'Help request sent to your family!';
+
+  @override
+  String get elderlyFamilyNotConnected => 'Family Not Connected';
+
+  @override
+  String get elderlyNotConnectedDesc =>
+      'You are not connected to a family member yet.\nWould you like to call the emergency helpline instead?';
+
+  @override
+  String get elderlyCancel => 'Cancel';
+
+  @override
+  String get elderlyCallHelpline => 'CALL 1930';
+
+  @override
+  String get elderlyHello => 'Hello!';
+
+  @override
+  String get elderlyDailySummaryText => 'Here is your daily safety summary.';
+
+  @override
+  String get elderlyPhoneSafe => 'Your Phone is Safe Today!';
+
+  @override
+  String get elderlyBeCareful => 'Be Careful Today!';
+
+  @override
+  String get elderlySafeBody =>
+      'No dangerous messages were found. Your Senior Shield is working well.';
+
+  @override
+  String elderlyDangerBody(Object count) {
+    return 'We blocked $count suspicious message(s) for you. Do not click unknown links.';
+  }
+
+  @override
+  String get elderlyAskFamilyForHelp => 'ASK FAMILY FOR HELP';
+
+  @override
+  String get elderlyCallCyberHelpline => 'CALL CYBER HELPLINE  1930';
+
+  @override
+  String get elderlyLatestSafetyCheck => 'LATEST SAFETY CHECK';
+
+  @override
+  String get elderlyDangerousVerdict => 'DANGEROUS — Do NOT click any links!';
+
+  @override
+  String get elderlySafeVerdict => 'SAFE — This message looks okay.';
+
+  @override
+  String elderlyReadingAloud(Object verdict) {
+    return 'Reading aloud: $verdict';
+  }
+
+  @override
+  String elderlyFromSender(Object sender) {
+    return 'From: $sender';
+  }
+
+  @override
+  String get elderlyNoMessages =>
+      'No messages scanned yet.\nYour shield is watching!';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navHistory => 'History';
+
+  @override
+  String get navFamily => 'Family';
+
+  @override
+  String get navReport => 'Report';
+
+  @override
+  String get navSettings => 'Settings';
 }

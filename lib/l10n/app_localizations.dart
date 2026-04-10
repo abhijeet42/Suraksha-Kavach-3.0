@@ -1387,6 +1387,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Family Member'**
   String get familyMember;
+
+  /// No description provided for @elderlyHelpSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Help request sent to your family!'**
+  String get elderlyHelpSent;
+
+  /// No description provided for @elderlyFamilyNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Not Connected'**
+  String get elderlyFamilyNotConnected;
+
+  /// No description provided for @elderlyNotConnectedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You are not connected to a family member yet.\nWould you like to call the emergency helpline instead?'**
+  String get elderlyNotConnectedDesc;
+
+  /// No description provided for @elderlyCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get elderlyCancel;
+
+  /// No description provided for @elderlyCallHelpline.
+  ///
+  /// In en, this message translates to:
+  /// **'CALL 1930'**
+  String get elderlyCallHelpline;
+
+  /// No description provided for @elderlyHello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello!'**
+  String get elderlyHello;
+
+  /// No description provided for @elderlyDailySummaryText.
+  ///
+  /// In en, this message translates to:
+  /// **'Here is your daily safety summary.'**
+  String get elderlyDailySummaryText;
+
+  /// No description provided for @elderlyPhoneSafe.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Phone is Safe Today!'**
+  String get elderlyPhoneSafe;
+
+  /// No description provided for @elderlyBeCareful.
+  ///
+  /// In en, this message translates to:
+  /// **'Be Careful Today!'**
+  String get elderlyBeCareful;
+
+  /// No description provided for @elderlySafeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No dangerous messages were found. Your Senior Shield is working well.'**
+  String get elderlySafeBody;
+
+  /// No description provided for @elderlyDangerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We blocked {count} suspicious message(s) for you. Do not click unknown links.'**
+  String elderlyDangerBody(Object count);
+
+  /// No description provided for @elderlyAskFamilyForHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'ASK FAMILY FOR HELP'**
+  String get elderlyAskFamilyForHelp;
+
+  /// No description provided for @elderlyCallCyberHelpline.
+  ///
+  /// In en, this message translates to:
+  /// **'CALL CYBER HELPLINE  1930'**
+  String get elderlyCallCyberHelpline;
+
+  /// No description provided for @elderlyLatestSafetyCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'LATEST SAFETY CHECK'**
+  String get elderlyLatestSafetyCheck;
+
+  /// No description provided for @elderlyDangerousVerdict.
+  ///
+  /// In en, this message translates to:
+  /// **'DANGEROUS — Do NOT click any links!'**
+  String get elderlyDangerousVerdict;
+
+  /// No description provided for @elderlySafeVerdict.
+  ///
+  /// In en, this message translates to:
+  /// **'SAFE — This message looks okay.'**
+  String get elderlySafeVerdict;
+
+  /// No description provided for @elderlyReadingAloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading aloud: {verdict}'**
+  String elderlyReadingAloud(Object verdict);
+
+  /// No description provided for @elderlyFromSender.
+  ///
+  /// In en, this message translates to:
+  /// **'From: {sender}'**
+  String elderlyFromSender(Object sender);
+
+  /// No description provided for @elderlyNoMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages scanned yet.\nYour shield is watching!'**
+  String get elderlyNoMessages;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get navHistory;
+
+  /// No description provided for @navFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get navFamily;
+
+  /// No description provided for @navReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get navReport;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
 }
 
 class _AppLocalizationsDelegate

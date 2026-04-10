@@ -19,6 +19,7 @@ class ElderlyDashboard extends StatelessWidget {
 
   void _askFamilyForHelp(BuildContext context) {
     final memberProvider = context.read<FamilyMemberProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     if (memberProvider.isConnected) {
       memberProvider.sendHelpRequestToAdmin();
@@ -28,10 +29,10 @@ class ElderlyDashboard extends StatelessWidget {
             children: [
               const Icon(Icons.check_circle_rounded, color: Colors.white, size: 28),
               const SizedBox(width: 12),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Help request sent to your family!',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  l10n.elderlyHelpSent,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],
@@ -45,25 +46,25 @@ class ElderlyDashboard extends StatelessWidget {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text(
-            'Family Not Connected',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          title: Text(
+            l10n.elderlyFamilyNotConnected,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          content: const Text(
-            'You are not connected to a family member yet.\nWould you like to call the emergency helpline instead?',
-            style: TextStyle(fontSize: 18, height: 1.5),
+          content: Text(
+            l10n.elderlyNotConnectedDesc,
+            style: const TextStyle(fontSize: 18, height: 1.5),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel', style: TextStyle(fontSize: 18)),
+              child: Text(l10n.elderlyCancel, style: const TextStyle(fontSize: 18)),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(ctx);
                 launchUrl(Uri.parse('tel:1930'));
               },
-              child: const Text('CALL 1930', style: TextStyle(fontSize: 18)),
+              child: Text(l10n.elderlyCallHelpline, style: const TextStyle(fontSize: 18)),
             ),
           ],
         ),
@@ -82,10 +83,10 @@ class ElderlyDashboard extends StatelessWidget {
     final bool isSafe = scamCount == 0;
     final Color statusColor = isSafe ? Colors.green.shade400 : Colors.orange.shade400;
     final IconData statusIcon = isSafe ? Icons.verified_user_rounded : Icons.warning_amber_rounded;
-    final String statusTitle = isSafe ? 'Your Phone is Safe Today!' : 'Be Careful Today!';
+    final String statusTitle = isSafe ? l10n.elderlyPhoneSafe : l10n.elderlyBeCareful;
     final String statusBody = isSafe
-        ? 'No dangerous messages were found. Your Senior Shield is working well.'
-        : 'We blocked $scamCount suspicious message${scamCount > 1 ? 's' : ''} for you. Do not click unknown links.';
+        ? l10n.elderlySafeBody
+        : l10n.elderlyDangerBody(scamCount.toString());
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
@@ -94,7 +95,7 @@ class ElderlyDashboard extends StatelessWidget {
         children: [
           // ── Greeting ──────────────────────────────────────────────────────
           Text(
-            'Hello!',
+            l10n.elderlyHello,
             style: theme.textTheme.displaySmall?.copyWith(
               fontWeight: FontWeight.w900,
               fontSize: 40,
@@ -102,8 +103,8 @@ class ElderlyDashboard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Here is your daily safety summary.',
-            style: TextStyle(fontSize: 18, color: Colors.white60),
+            l10n.elderlyDailySummaryText,
+            style: const TextStyle(fontSize: 18, color: Colors.white60),
           ),
           const SizedBox(height: 28),
 
@@ -141,7 +142,7 @@ class ElderlyDashboard extends StatelessWidget {
 
           // ── Ask Family for Help ──────────────────────────────────────────
           _ElderlyButton(
-            label: 'ASK FAMILY FOR HELP',
+            label: l10n.elderlyAskFamilyForHelp,
             icon: Icons.family_restroom_rounded,
             color: Colors.pink.shade400,
             onTap: () => _askFamilyForHelp(context),
@@ -150,7 +151,7 @@ class ElderlyDashboard extends StatelessWidget {
 
           // ── Call Helpline ────────────────────────────────────────────────
           _ElderlyButton(
-            label: 'CALL CYBER HELPLINE  1930',
+            label: l10n.elderlyCallCyberHelpline,
             icon: Icons.phone_in_talk_rounded,
             color: Colors.teal.shade400,
             onTap: () => launchUrl(Uri.parse('tel:1930')),
@@ -159,8 +160,8 @@ class ElderlyDashboard extends StatelessWidget {
 
           // ── Recent Message Check ─────────────────────────────────────────
           Text(
-            'LATEST SAFETY CHECK',
-            style: TextStyle(
+            l10n.elderlyLatestSafetyCheck,
+            style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
               letterSpacing: 1.5,
@@ -175,14 +176,14 @@ class ElderlyDashboard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.04),
+                color: Colors.white.withAlpha(10), // used withAlpha to fix deprecation warning
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'No messages scanned yet.\nYour shield is watching!',
+                  l10n.elderlyNoMessages,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.white38, height: 1.6),
+                  style: const TextStyle(fontSize: 16, color: Colors.white38, height: 1.6),
                 ),
               ),
             ),
@@ -253,12 +254,13 @@ class _LatestMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final analysis = provider.latestAnalysis!;
     final msg = provider.latestMessage!;
     final bool isDangerous = analysis.riskScore > 50;
     final Color color = isDangerous ? Colors.red.shade400 : Colors.green.shade400;
     final IconData icon = isDangerous ? Icons.dangerous_rounded : Icons.verified_user_rounded;
-    final String verdict = isDangerous ? 'DANGEROUS — Do NOT click any links!' : 'SAFE — This message looks okay.';
+    final String verdict = isDangerous ? l10n.elderlyDangerousVerdict : l10n.elderlySafeVerdict;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -291,7 +293,7 @@ class _LatestMessageCard extends StatelessWidget {
                            const SizedBox(width: 12),
                            Expanded(
                              child: Text(
-                               "Reading aloud: $verdict", 
+                               l10n.elderlyReadingAloud(verdict), 
                                style: const TextStyle(fontSize: 18, color: Colors.white)
                              )
                            ),
@@ -308,7 +310,7 @@ class _LatestMessageCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'From: ${msg.sender}',
+            l10n.elderlyFromSender(msg.sender),
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 8),

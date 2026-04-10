@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../features/auth/providers/auth_provider.dart';
+import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CRITICAL STABILITY RULE:
@@ -22,6 +23,7 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final isAdmin = context.watch<AuthProvider>().isAdmin;
     final location = GoRouterState.of(context).uri.toString();
+    final l10n = AppLocalizations.of(context)!;
 
     // Fixed 5-item path list — order matches destinations list below.
     // Do NOT make this conditional. See stability note above.
@@ -52,15 +54,15 @@ class MainScaffold extends StatelessWidget {
         selectedIndex: getIndex(),
         onDestinationSelected: onItemTapped,
         destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
-            label: 'Home',
+          NavigationDestination(
+            icon: const Icon(Icons.dashboard_outlined),
+            selectedIcon: const Icon(Icons.dashboard),
+            label: l10n.navHome,
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.history_outlined),
-            selectedIcon: Icon(Icons.history),
-            label: 'History',
+          NavigationDestination(
+            icon: const Icon(Icons.history_outlined),
+            selectedIcon: const Icon(Icons.history),
+            label: l10n.navHistory,
           ),
           NavigationDestination(
             icon: Icon(
@@ -69,17 +71,17 @@ class MainScaffold extends StatelessWidget {
               color: isAdmin ? null : Colors.white24,
             ),
             selectedIcon: const Icon(Icons.family_restroom),
-            label: 'Family',
+            label: l10n.navFamily,
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.report_outlined),
-            selectedIcon: Icon(Icons.report),
-            label: 'Report',
+          NavigationDestination(
+            icon: const Icon(Icons.report_outlined),
+            selectedIcon: const Icon(Icons.report),
+            label: l10n.navReport,
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'Settings',
+          NavigationDestination(
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: l10n.navSettings,
           ),
         ],
       ),
