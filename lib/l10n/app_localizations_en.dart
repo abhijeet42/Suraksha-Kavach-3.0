@@ -417,9 +417,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emergencyLock => 'EMERGENCY LOCK';
 
   @override
-  String get deepScanNetwork => 'DEEP SCAN NETWORK';
-
-  @override
   String get activeNodes => 'Active Nodes';
 
   @override
@@ -479,39 +476,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get safetyReminderDesc =>
       'SAFETY REMINDER: Family Network Health is below 50%. Focus on increasing security!';
-
-  @override
-  String get analyzingNetworkNodes => 'ANALYZING NETWORK NODES...';
-
-  @override
-  String get evaluatingThreatVectors =>
-      'Evaluating cross-device threat vectors';
-
-  @override
-  String get networkAuditReport => 'NETWORK AUDIT REPORT';
-
-  @override
-  String get globalHealthIndex => 'Global Health Index';
-
-  @override
-  String get secureNodes => 'Secure Nodes';
-
-  @override
-  String get warningNodes => 'Warning Nodes';
-
-  @override
-  String get criticalNodes => 'Critical Nodes';
-
-  @override
-  String get perimeterSecure =>
-      'Your family perimeter is secure. No action required.';
-
-  @override
-  String get vulnerabilitiesDetected =>
-      'Vulnerabilities detected. Review \"Critical Nodes\" history immediately.';
-
-  @override
-  String get acknowledge => 'ACKNOWLEDGE';
 
   @override
   String get networkRiskScoresReset => 'Network Risk Scores Reset';

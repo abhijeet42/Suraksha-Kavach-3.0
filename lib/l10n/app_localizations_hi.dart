@@ -416,9 +416,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get emergencyLock => 'आपातकालीन लॉक';
 
   @override
-  String get deepScanNetwork => 'नेटवर्क स्कैन करें';
-
-  @override
   String get activeNodes => 'सक्रिय नोड्स';
 
   @override
@@ -478,37 +475,6 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get safetyReminderDesc =>
       'सुरक्षा चेतावनी: नेटवर्क स्वास्थ्य 50% से कम है। सुरक्षा बढ़ाएं!';
-
-  @override
-  String get analyzingNetworkNodes => 'नेटवर्क नोड्स की जांच...';
-
-  @override
-  String get evaluatingThreatVectors => 'खतरों का मूल्यांकन...';
-
-  @override
-  String get networkAuditReport => 'नेटवर्क ऑडिट रिपोर्ट';
-
-  @override
-  String get globalHealthIndex => 'ग्लोबल हेल्थ इंडेक्स';
-
-  @override
-  String get secureNodes => 'सुरक्षित नोड्स';
-
-  @override
-  String get warningNodes => 'चेतावनी नोड्स';
-
-  @override
-  String get criticalNodes => 'गंभीर नोड्स';
-
-  @override
-  String get perimeterSecure =>
-      'आपका नेटवर्क सुरक्षित है। किसी कार्रवाई की आवश्यकता नहीं है।';
-
-  @override
-  String get vulnerabilitiesDetected => 'कमियां पाई गईं। तुरंत जांच करें।';
-
-  @override
-  String get acknowledge => 'समझ गया';
 
   @override
   String get networkRiskScoresReset => 'नेटवर्क रिस्क स्कोर रीसेट किए गए';

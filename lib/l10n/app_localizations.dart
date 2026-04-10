@@ -878,12 +878,6 @@ abstract class AppLocalizations {
   /// **'EMERGENCY LOCK'**
   String get emergencyLock;
 
-  /// No description provided for @deepScanNetwork.
-  ///
-  /// In en, this message translates to:
-  /// **'DEEP SCAN NETWORK'**
-  String get deepScanNetwork;
-
   /// No description provided for @activeNodes.
   ///
   /// In en, this message translates to:
@@ -997,66 +991,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SAFETY REMINDER: Family Network Health is below 50%. Focus on increasing security!'**
   String get safetyReminderDesc;
-
-  /// No description provided for @analyzingNetworkNodes.
-  ///
-  /// In en, this message translates to:
-  /// **'ANALYZING NETWORK NODES...'**
-  String get analyzingNetworkNodes;
-
-  /// No description provided for @evaluatingThreatVectors.
-  ///
-  /// In en, this message translates to:
-  /// **'Evaluating cross-device threat vectors'**
-  String get evaluatingThreatVectors;
-
-  /// No description provided for @networkAuditReport.
-  ///
-  /// In en, this message translates to:
-  /// **'NETWORK AUDIT REPORT'**
-  String get networkAuditReport;
-
-  /// No description provided for @globalHealthIndex.
-  ///
-  /// In en, this message translates to:
-  /// **'Global Health Index'**
-  String get globalHealthIndex;
-
-  /// No description provided for @secureNodes.
-  ///
-  /// In en, this message translates to:
-  /// **'Secure Nodes'**
-  String get secureNodes;
-
-  /// No description provided for @warningNodes.
-  ///
-  /// In en, this message translates to:
-  /// **'Warning Nodes'**
-  String get warningNodes;
-
-  /// No description provided for @criticalNodes.
-  ///
-  /// In en, this message translates to:
-  /// **'Critical Nodes'**
-  String get criticalNodes;
-
-  /// No description provided for @perimeterSecure.
-  ///
-  /// In en, this message translates to:
-  /// **'Your family perimeter is secure. No action required.'**
-  String get perimeterSecure;
-
-  /// No description provided for @vulnerabilitiesDetected.
-  ///
-  /// In en, this message translates to:
-  /// **'Vulnerabilities detected. Review \"Critical Nodes\" history immediately.'**
-  String get vulnerabilitiesDetected;
-
-  /// No description provided for @acknowledge.
-  ///
-  /// In en, this message translates to:
-  /// **'ACKNOWLEDGE'**
-  String get acknowledge;
 
   /// No description provided for @networkRiskScoresReset.
   ///

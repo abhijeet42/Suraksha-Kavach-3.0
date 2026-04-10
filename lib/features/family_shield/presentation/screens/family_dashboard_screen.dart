@@ -232,19 +232,6 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildActionButton(
-                              title: AppLocalizations.of(context)!.deepScanNetwork,
-                              icon: Icons.radar_rounded,
-                              color: Colors.cyanAccent.shade400,
-                              onTap: () => _runDeepNetworkScan(context, adminProvider),
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(height: 24),
 
                       // Quick Stats
@@ -646,104 +633,6 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
           ),
         );
       },
-    );
-  }
-
-  void _runDeepNetworkScan(BuildContext context, FamilyAdminProvider provider) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF090A0E),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 20),
-            const CircularProgressIndicator(color: Colors.cyanAccent),
-            const SizedBox(height: 32),
-            Text(AppLocalizations.of(context)!.analyzingNetworkNodes,
-                style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.cyanAccent)),
-            const SizedBox(height: 8),
-            Text(AppLocalizations.of(context)!.evaluatingThreatVectors,
-                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-
-    // Simulate multi-node analysis time
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (context.mounted) {
-      Navigator.pop(context); // Close loading
-      _showDeepScanReport(context, provider);
-    }
-  }
-
-  void _showDeepScanReport(BuildContext context, FamilyAdminProvider provider) {
-    final int score = provider.familyCyberScore;
-    final int safeMembers = provider.members.where((m) => m.riskScore < 30).length;
-    final int warningMembers = provider.members.where((m) => m.riskScore >= 30 && m.riskScore < 70).length;
-    final int criticalMembers = provider.members.where((m) => m.riskScore >= 70).length;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => FadeInUp(
-        child: AlertDialog(
-          backgroundColor: const Color(0xFF101216),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
-            side: const BorderSide(color: Colors.cyanAccent, width: 2),
-          ),
-          title: Row(
-            children: [
-              const Icon(Icons.analytics_rounded, color: Colors.cyanAccent),
-              const SizedBox(width: 12),
-              Text(AppLocalizations.of(context)!.networkAuditReport, style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1)),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildReportRow(AppLocalizations.of(context)!.globalHealthIndex, '$score%', score > 50 ? Colors.greenAccent : Colors.redAccent),
-              const Divider(height: 32, color: Colors.white10),
-              _buildReportRow(AppLocalizations.of(context)!.secureNodes, '$safeMembers', Colors.greenAccent),
-              _buildReportRow(AppLocalizations.of(context)!.warningNodes, '$warningMembers', Colors.orangeAccent),
-              _buildReportRow(AppLocalizations.of(context)!.criticalNodes, '$criticalMembers', Colors.redAccent),
-              const SizedBox(height: 24),
-              Text(
-                score > 80
-                    ? AppLocalizations.of(context)!.perimeterSecure
-                    : AppLocalizations.of(context)!.vulnerabilitiesDetected,
-                style: TextStyle(color: Colors.white.withOpacity(0.6), height: 1.5, fontSize: 13),
-              ),
-            ],
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(AppLocalizations.of(context)!.acknowledge, style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.cyanAccent)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildReportRow(String label, String value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.white54, fontSize: 13)),
-          Text(value, style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 15)),
-        ],
-      ),
     );
   }
 }
