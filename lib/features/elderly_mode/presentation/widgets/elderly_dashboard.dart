@@ -248,26 +248,63 @@ class _ElderlyButton extends StatelessWidget {
   }
 }
 
-class _LatestMessageCard extends StatelessWidget {
+class _LatestMessageCard extends StatefulWidget {
   final SmsStreamProvider provider;
   const _LatestMessageCard({required this.provider});
 
   @override
+  State<_LatestMessageCard> createState() => _LatestMessageCardState();
+}
+
+class _LatestMessageCardState extends State<_LatestMessageCard> {
+  static int _lastSpokenTimestamp = 0;
+
+  @override
   Widget build(BuildContext context) {
+    if (widget.provider.isAnalyzing) {
+      return Container(
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: Colors.orange.withAlpha(20),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.orange.withAlpha(50), width: 2),
+        ),
+        child: const Center(
+          child: Text(
+            'Analyzing new message...\nPlease wait.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, color: Colors.orangeAccent, fontWeight: FontWeight.bold, height: 1.5),
+          ),
+        ),
+      );
+    }
+
     final l10n = AppLocalizations.of(context)!;
-    final analysis = provider.latestAnalysis!;
-    final msg = provider.latestMessage!;
+    final analysis = widget.provider.latestAnalysis!;
+    final msg = widget.provider.latestMessage!;
     final bool isDangerous = analysis.riskScore > 50;
     final Color color = isDangerous ? Colors.red.shade400 : Colors.green.shade400;
     final IconData icon = isDangerous ? Icons.dangerous_rounded : Icons.verified_user_rounded;
     final String verdict = isDangerous ? l10n.elderlyDangerousVerdict : l10n.elderlySafeVerdict;
 
+    // Safely execute automatic voice alert exactly once for new messages
+    if (msg.timestamp > _lastSpokenTimestamp) {
+      _lastSpokenTimestamp = msg.timestamp;
+      final langCode = Localizations.localeOf(context).languageCode;
+      
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        await VoiceService.setLanguage(langCode);
+        await VoiceService.speak(verdict);
+      });
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withAlpha(20),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.4), width: 2),
+        border: Border.all(color: color.withAlpha(100), width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,25 +320,29 @@ class _LatestMessageCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  VoiceService.speak(verdict);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                     SnackBar(
-                       content: Row(
-                         children: [
-                           const Icon(Icons.record_voice_over, color: Colors.white, size: 28),
-                           const SizedBox(width: 12),
-                           Expanded(
-                             child: Text(
-                               l10n.elderlyReadingAloud(verdict), 
-                               style: const TextStyle(fontSize: 18, color: Colors.white)
-                             )
-                           ),
-                         ]
-                       ),
-                       behavior: SnackBarBehavior.floating,
-                     )
-                   );
+                onPressed: () async {
+                  final langCode = Localizations.localeOf(context).languageCode;
+                  await VoiceService.setLanguage(langCode);
+                  await VoiceService.speak(verdict);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                       SnackBar(
+                         content: Row(
+                           children: [
+                             const Icon(Icons.record_voice_over, color: Colors.white, size: 28),
+                             const SizedBox(width: 12),
+                             Expanded(
+                               child: Text(
+                                 l10n.elderlyReadingAloud(verdict), 
+                                 style: const TextStyle(fontSize: 18, color: Colors.white)
+                               )
+                             ),
+                           ]
+                         ),
+                         behavior: SnackBarBehavior.floating,
+                       )
+                     );
+                  }
                 },
                 icon: const Icon(Icons.volume_up_rounded, size: 36, color: Colors.white70),
                 tooltip: 'Read Aloud',
@@ -325,3 +366,4 @@ class _LatestMessageCard extends StatelessWidget {
     );
   }
 }
+

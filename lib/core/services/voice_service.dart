@@ -20,6 +20,19 @@ class VoiceService {
     }
   }
 
+  static Future<void> setLanguage(String languageCode) async {
+    if (kIsWeb || Platform.isWindows) return;
+    try {
+      if (languageCode.startsWith('hi')) {
+        await _flutterTts.setLanguage("hi-IN");
+      } else {
+        await _flutterTts.setLanguage("en-US");
+      }
+    } catch (e) {
+      if (kDebugMode) print('Failed to set TTS language: $e');
+    }
+  }
+
   static Future<void> speak(String text) async {
     if (kIsWeb || Platform.isWindows) return;
     if (!_isInitialized) await initialize();
