@@ -9,11 +9,13 @@ import 'features/family_shield/providers/family_admin_provider.dart';
 import 'features/family_shield/providers/family_member_provider.dart';
 import 'core/database/hive_service.dart';
 import 'core/theme/theme_provider.dart';
+import 'core/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await HiveService.init();
+  await NotificationService.initialize();
   
   runApp(
     MultiProvider(

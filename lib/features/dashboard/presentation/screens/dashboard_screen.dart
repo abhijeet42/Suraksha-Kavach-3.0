@@ -167,7 +167,7 @@ class DashboardScreen extends StatelessWidget {
                 final text = controller.text;
                 if (text.isEmpty) return;
                 
-                Navigator.pop(ctx);
+                setState(() => isLoading = true);
                 
                 final analyzer = RuleBasedAnalyzer();
                 final result = await analyzer.analyze(SmsMessageData(
@@ -176,7 +176,9 @@ class DashboardScreen extends StatelessWidget {
                   timestamp: DateTime.now().millisecondsSinceEpoch,
                 ));
 
+                setState(() => isLoading = false);
                 if (context.mounted) {
+                  Navigator.pop(ctx);
                   _showAnalysisResultDialog(context, text, result);
                 }
               }, 
@@ -191,21 +193,74 @@ class DashboardScreen extends StatelessWidget {
   void _showAnalysisResultDialog(BuildContext context, String text, dynamic result) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(result.level.displayName, style: TextStyle(color: result.level.color)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Score: ${result.riskScore.toInt()}% Risk'),
-            const SizedBox(height: 16),
-            const Text('Flags:', style: TextStyle(fontWeight: FontWeight.bold)),
-            ...result.flagReasons.map((f) => Text('• $f')),
+      builder: (ctx) => ZoomIn(
+        child: AlertDialog(
+          backgroundColor: const Color(0xFF101216),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32),
+            side: BorderSide(color: result.level.color.withOpacity(0.3), width: 2),
+          ),
+          title: Row(
+            children: [
+              Icon(result.level.icon, color: result.level.color),
+              const SizedBox(width: 12),
+              Text(
+                result.level.displayName.toUpperCase(),
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w900, color: result.level.color, letterSpacing: 1),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text('"$text"', style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.white70, fontSize: 13)),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('THREAT SCORE', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.white38)),
+                  Text('${result.riskScore.toInt()}%', style: TextStyle(fontWeight: FontWeight.w900, color: result.level.color)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(
+                value: result.riskScore / 100,
+                backgroundColor: Colors.white.withOpacity(0.05),
+                color: result.level.color,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              const SizedBox(height: 24),
+              const Text('HEURISTIC FLAGS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.white38)),
+              const SizedBox(height: 8),
+              ...result.flagReasons.map((f) => Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('• ', style: TextStyle(color: Colors.white54)),
+                    Expanded(child: Text(f, style: const TextStyle(fontSize: 12, color: Colors.white70))),
+                  ],
+                ),
+              )),
+            ],
+          ),
+          actions: [
+            Center(
+              child: TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('DISMISS ANALYSIS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white54)),
+              ),
+            ),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
-        ],
       ),
     );
   }
@@ -366,8 +421,11 @@ class DashboardScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent.withOpacity(0.2), foregroundColor: Colors.redAccent),
                     ),
                   ),
-                const SizedBox(height: 32),
               ],
+              
+              const SizedBox(height: 32),
+              const UrlDefenderSection(),
+              const SizedBox(height: 32),
 
               const Text('LIVE ALERTS', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, letterSpacing: 1, color: Colors.white38)),
               const SizedBox(height: 16),
@@ -503,7 +561,6 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildRiskCard(BuildContext context, SmsStreamProvider provider) {
     if (provider.isAnalyzing || provider.latestAnalysis == null) {
       return Card(
@@ -585,6 +642,190 @@ class DashboardScreen extends StatelessWidget {
                     ],
                   ),
                 )),
+          ],
+        ),
+      ),
+    );
+  }
+} // End of DashboardScreen
+
+class UrlDefenderSection extends StatefulWidget {
+  const UrlDefenderSection({super.key});
+
+  @override
+  State<UrlDefenderSection> createState() => _UrlDefenderSectionState();
+}
+
+class _UrlDefenderSectionState extends State<UrlDefenderSection> {
+  final TextEditingController _urlController = TextEditingController();
+  bool _isScanning = false;
+  Map<String, dynamic>? _scanResult;
+
+  @override
+  void dispose() {
+    _urlController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _startScan() async {
+    if (_urlController.text.isEmpty) return;
+    setState(() {
+      _isScanning = true;
+      _scanResult = null;
+    });
+
+    // Realistic scanning simulation
+    await Future.delayed(const Duration(seconds: 2));
+
+    final url = _urlController.text.toLowerCase();
+    double score = 0;
+    List<String> flags = [];
+
+    if (!url.startsWith('https://')) {
+      score += 35;
+      flags.add('Insecure connection (No HTTPS/SSL)');
+    }
+    if (url.contains('bit.ly') || url.contains('t.co') || url.contains('tinyurl') || url.contains('short.url')) {
+      score += 40;
+      flags.add('URL shortener detected (Common phishing tactic)');
+    }
+    if (RegExp(r'\.zip|\.mov|\.top|\.tk|\.ml|\.ga|\.cf|\.gq|\.app|\.icu').hasMatch(url)) {
+      score += 55;
+      flags.add('Suspicious TLD pattern detected');
+    }
+    if (RegExp(r'verify|login|bank|account|update|gift|prize|cash|claim').hasMatch(url)) {
+      score += 25;
+      flags.add('Contains high-risk transaction keywords');
+    }
+
+    if (score > 100) score = 100;
+
+    if (mounted) {
+      setState(() {
+        _isScanning = false;
+        _scanResult = {
+          'score': score,
+          'flags': flags,
+          'isSafe': score < 30,
+          'isSuspicious': score >= 30 && score < 70,
+          'isMalicious': score >= 70,
+        };
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      color: const Color(0xFF14171E),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(28),
+        side: BorderSide(color: Colors.white.withOpacity(0.05)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(color: theme.primaryColor.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+                  child: Icon(Icons.language_rounded, color: theme.primaryColor, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Text('URL DEFENDER', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: 1)),
+              ],
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _urlController,
+              style: const TextStyle(fontSize: 14),
+              decoration: InputDecoration(
+                hintText: 'Paste suspicious link here...',
+                hintStyle: TextStyle(color: Colors.white.withOpacity(0.1)),
+                filled: true,
+                fillColor: Colors.black.withOpacity(0.2),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _isScanning ? null : _startScan,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.primaryColor,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              child: const Text('START SECURITY SCAN', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1)),
+            ),
+            if (_isScanning)
+              Padding(
+                padding: const EdgeInsets.only(top: 24.0),
+                child: Column(
+                  children: [
+                    const LinearProgressIndicator(color: Colors.cyanAccent, backgroundColor: Colors.white10, minHeight: 2),
+                    const SizedBox(height: 12),
+                    Text('INTERROGATING URL REPUTATION...', style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.4), letterSpacing: 2, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            if (_scanResult != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 24.0),
+                child: FadeInUp(
+                  duration: const Duration(milliseconds: 400),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: (_scanResult!['isSafe'] ? Colors.greenAccent : (_scanResult!['isSuspicious'] ? Colors.orangeAccent : Colors.redAccent)).withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: (_scanResult!['isSafe'] ? Colors.greenAccent : (_scanResult!['isSuspicious'] ? Colors.orangeAccent : Colors.redAccent)).withOpacity(0.3)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              _scanResult!['isSafe'] ? Icons.verified_rounded : (_scanResult!['isSuspicious'] ? Icons.warning_rounded : Icons.gpp_maybe_rounded),
+                              color: _scanResult!['isSafe'] ? Colors.greenAccent : (_scanResult!['isSuspicious'] ? Colors.orangeAccent : Colors.redAccent),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              _scanResult!['isSafe'] ? 'URL: SECURE' : (_scanResult!['isSuspicious'] ? 'URL: SUSPICIOUS' : 'URL: MALICIOUS'),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: _scanResult!['isSafe'] ? Colors.greenAccent : (_scanResult!['isSuspicious'] ? Colors.orangeAccent : Colors.redAccent),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_scanResult!['flags'].isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          ..._scanResult!['flags'].map<Widget>((f) => Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Row(
+                              children: [
+                                const Text('• ', style: TextStyle(color: Colors.white24)),
+                                Expanded(child: Text(f, style: const TextStyle(fontSize: 12, color: Colors.white70))),
+                              ],
+                            ),
+                          )),
+                        ] else if (_scanResult!['isSafe'])
+                          const Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: Text('No immediate threats detected in this URL pattern.', style: TextStyle(fontSize: 12, color: Colors.white60)),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

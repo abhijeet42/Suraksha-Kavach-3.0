@@ -9,6 +9,7 @@ import '../models/family_member.dart';
 import '../models/alert_item.dart';
 import '../models/qr_payload.dart';
 import '../../../data/models/risk_level.dart';
+import '../../../core/services/notification_service.dart';
 
 class FamilyAdminProvider extends ChangeNotifier {
   final List<FamilyMember> _members = [];
@@ -17,6 +18,7 @@ class FamilyAdminProvider extends ChangeNotifier {
   HttpServer? _server;
   String _familyId = 'FAM-${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}';
   bool _isServerRunning = false;
+  bool _lowScoreNotificationSent = false;
 
   List<FamilyMember> get members => _members;
   int get totalMembers => _members.length;
@@ -127,6 +129,8 @@ class FamilyAdminProvider extends ChangeNotifier {
             riskScore: (member.riskScore + 20).clamp(0, 100),
             lastSync: DateTime.now(),
           );
+          
+          _checkHealthAndNotify();
           notifyListeners();
           return Response.ok(json.encode({'status': 'alert_logged'}));
         }
@@ -158,6 +162,41 @@ class FamilyAdminProvider extends ChangeNotifier {
   Future<void> stopServer() async {
     await _server?.close(force: true);
     _isServerRunning = false;
+    notifyListeners();
+  }
+
+  void resetRiskScores() {
+    for (int i = 0; i < _members.length; i++) {
+      _members[i] = _members[i].copyWith(
+        riskScore: 0,
+        safetyStatus: RiskLevel.safe,
+      );
+    }
+    _lowScoreNotificationSent = false;
+    notifyListeners();
+  }
+
+  void _checkHealthAndNotify() {
+    if (familyCyberScore < 50 && !_lowScoreNotificationSent) {
+      _lowScoreNotificationSent = true;
+      
+      // Trigger Real Android Notification
+      NotificationService.showNotification(
+        id: 101,
+        title: '🛡️ SECURITY ALERT',
+        body: 'Family Network Health is below 50%! Monitor active nodes immediately.',
+      );
+      
+      if (kDebugMode) print('CRITICAL: Network Health below 50%! Sending focus reminder to Admin.');
+    } else if (familyCyberScore >= 50) {
+      _lowScoreNotificationSent = false;
+    }
+  }
+
+  bool get shouldShowSafetyReminder => _lowScoreNotificationSent;
+  
+  void dismissSafetyReminder() {
+    _lowScoreNotificationSent = false;
     notifyListeners();
   }
 }

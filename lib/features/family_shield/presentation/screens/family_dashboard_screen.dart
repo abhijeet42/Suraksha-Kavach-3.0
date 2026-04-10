@@ -107,9 +107,39 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
     );
   }
 
+  void _showSafetyReminder() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: const [
+            Icon(Icons.security_rounded, color: Colors.white),
+            SizedBox(width: 12),
+            Expanded(child: Text("SAFETY REMINDER: Family Network Health is below 50%. Focus on increasing security!")),
+          ],
+        ),
+        backgroundColor: Colors.orangeAccent.shade700,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 5),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: Colors.white,
+          onPressed: () {
+            context.read<FamilyAdminProvider>().dismissSafetyReminder();
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final adminProvider = context.watch<FamilyAdminProvider>();
+    
+    // Listen for low health score to show notification
+    if (adminProvider.shouldShowSafetyReminder) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _showSafetyReminder());
+    }
+
     final theme = Theme.of(context);
 
     // Dynamic stats
@@ -163,7 +193,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // 1. Cyber Score Dashboard
-                _buildCyberScoreHeader(adminProvider.familyCyberScore, theme),
+                _buildCyberScoreHeader(context, adminProvider.familyCyberScore, theme),
                 
                 // 2. Action Buttons & Quick Stats
                 Padding(
@@ -208,11 +238,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
                               title: 'DEEP SCAN NETWORK',
                               icon: Icons.radar_rounded,
                               color: Colors.cyanAccent.shade400,
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Initiating deep heuristic scan across all connected nodes...')),
-                                );
-                              },
+                              onTap: () => _runDeepNetworkScan(context, adminProvider),
                             ),
                           ),
                         ],
@@ -369,7 +395,7 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
     );
   }
 
-  Widget _buildCyberScoreHeader(int score, ThemeData theme) {
+  Widget _buildCyberScoreHeader(BuildContext context, int score, ThemeData theme) {
     Color scoreColor = score > 80 ? Colors.greenAccent : (score > 50 ? Colors.orangeAccent : Colors.redAccent);
     
     return Container(
@@ -383,43 +409,63 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
           BoxShadow(color: scoreColor.withOpacity(0.05), blurRadius: 40, spreadRadius: -10),
         ],
       ),
-      child: Column(
+      child: Stack(
         children: [
-          Stack(
-            alignment: Alignment.center,
+          // Reset Button
+          Positioned(
+            top: 0,
+            left: 20,
+            child: IconButton(
+              onPressed: () {
+                context.read<FamilyAdminProvider>().resetRiskScores();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Network Risk Scores Reset'), behavior: SnackBarBehavior.floating),
+                );
+              },
+              icon: Icon(Icons.refresh_rounded, color: Colors.white.withOpacity(0.3), size: 20),
+              tooltip: 'Reset Scores',
+            ),
+          ),
+          Column(
             children: [
-              SizedBox(
-                height: 160,
-                width: 160,
-                child: CircularProgressIndicator(
-                  value: score / 100,
-                  strokeWidth: 12,
-                  backgroundColor: Colors.white.withOpacity(0.05),
-                  color: scoreColor,
-                  strokeCap: StrokeCap.round,
-                ),
-              ),
-              Column(
+              Stack(
+                alignment: Alignment.center,
                 children: [
-                  Text(
-                    '$score',
-                    style: GoogleFonts.outfit(fontSize: 56, fontWeight: FontWeight.w900, color: Colors.white, height: 1.0),
+                  SizedBox(
+                    height: 160,
+                    width: 160,
+                    child: CircularProgressIndicator(
+                      value: score / 100,
+                      strokeWidth: 12,
+                      backgroundColor: Colors.white.withOpacity(0.05),
+                      color: scoreColor,
+                      strokeCap: StrokeCap.round,
+                    ),
                   ),
-                  Text('OUT OF 100', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.4), letterSpacing: 2)),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '$score',
+                        style: GoogleFonts.outfit(fontSize: 56, fontWeight: FontWeight.w900, color: Colors.white, height: 1.0),
+                      ),
+                      Text('OUT OF 100', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.4), letterSpacing: 2)),
+                    ],
+                  )
+                ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.health_and_safety_rounded, color: scoreColor, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'NETWORK HEALTH: ${score > 80 ? "OPTIMAL" : (score > 50 ? "WARNING" : "CRITICAL")}',
+                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w900, color: scoreColor, letterSpacing: 1.5),
+                  ),
                 ],
               )
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.health_and_safety_rounded, color: scoreColor, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'NETWORK HEALTH: ${score > 80 ? "OPTIMAL" : (score > 50 ? "WARNING" : "CRITICAL")}',
-                style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w900, color: scoreColor, letterSpacing: 1.5),
-              ),
             ],
           )
         ],
@@ -598,6 +644,104 @@ class _FamilyDashboardScreenState extends State<FamilyDashboardScreen> {
           ),
         );
       },
+    );
+  }
+
+  void _runDeepNetworkScan(BuildContext context, FamilyAdminProvider provider) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF090A0E),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(color: Colors.cyanAccent),
+            const SizedBox(height: 32),
+            Text('ANALYZING NETWORK NODES...',
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 2, color: Colors.cyanAccent)),
+            const SizedBox(height: 8),
+            Text('Evaluating cross-device threat vectors',
+                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+
+    // Simulate multi-node analysis time
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (context.mounted) {
+      Navigator.pop(context); // Close loading
+      _showDeepScanReport(context, provider);
+    }
+  }
+
+  void _showDeepScanReport(BuildContext context, FamilyAdminProvider provider) {
+    final int score = provider.familyCyberScore;
+    final int safeMembers = provider.members.where((m) => m.riskScore < 30).length;
+    final int warningMembers = provider.members.where((m) => m.riskScore >= 30 && m.riskScore < 70).length;
+    final int criticalMembers = provider.members.where((m) => m.riskScore >= 70).length;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => FadeInUp(
+        child: AlertDialog(
+          backgroundColor: const Color(0xFF101216),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32),
+            side: const BorderSide(color: Colors.cyanAccent, width: 2),
+          ),
+          title: Row(
+            children: [
+              const Icon(Icons.analytics_rounded, color: Colors.cyanAccent),
+              const SizedBox(width: 12),
+              Text('NETWORK AUDIT REPORT', style: GoogleFonts.outfit(fontWeight: FontWeight.w900, letterSpacing: 1)),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildReportRow('Global Health Index', '$score%', score > 50 ? Colors.greenAccent : Colors.redAccent),
+              const Divider(height: 32, color: Colors.white10),
+              _buildReportRow('Secure Nodes', '$safeMembers', Colors.greenAccent),
+              _buildReportRow('Warning Nodes', '$warningMembers', Colors.orangeAccent),
+              _buildReportRow('Critical Nodes', '$criticalMembers', Colors.redAccent),
+              const SizedBox(height: 24),
+              Text(
+                score > 80
+                    ? 'Your family perimeter is secure. No action required.'
+                    : 'Vulnerabilities detected. Review "Critical Nodes" history immediately.',
+                style: TextStyle(color: Colors.white.withOpacity(0.6), height: 1.5, fontSize: 13),
+              ),
+            ],
+          ),
+          actions: [
+            Center(
+              child: TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('ACKNOWLEDGE', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.cyanAccent)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReportRow(String label, String value, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+          Text(value, style: TextStyle(color: color, fontWeight: FontWeight.w900, fontSize: 15)),
+        ],
+      ),
     );
   }
 }
