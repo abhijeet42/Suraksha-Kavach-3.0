@@ -16,6 +16,7 @@ import 'core/localization/locale_provider.dart';
 import 'features/elderly_mode/providers/elderly_mode_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:suraksha_kavach/l10n/app_localizations.dart';
+import 'features/reporting/providers/threat_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => FamilyMemberProvider()),
         ChangeNotifierProvider(create: (_) => ElderlyModeProvider()),
         ChangeNotifierProvider(create: (_) => SmsHistoryProvider()),
+        ChangeNotifierProvider(create: (_) => ThreatProvider()),
         ChangeNotifierProxyProvider<SmsHistoryProvider, SmsStreamProvider>(
           create: (_) => SmsStreamProvider(),
           update: (_, history, stream) => stream!..updateHistoryProvider(history),

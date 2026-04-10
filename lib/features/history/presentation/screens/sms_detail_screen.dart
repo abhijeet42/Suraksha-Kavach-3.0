@@ -3,7 +3,11 @@ import 'package:animate_do/animate_do.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../data/models/saved_sms_record.dart';
+import '../../../../data/models/threat_report.dart';
+import '../../../auth/providers/auth_provider.dart';
+import '../../../reporting/providers/threat_provider.dart';
 import 'package:suraksha_kavach/l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class SmsDetailScreen extends StatelessWidget {
   final SavedSmsRecord record;
@@ -133,7 +137,41 @@ class SmsDetailScreen extends StatelessWidget {
               const SizedBox(height: 64),
               
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  final authProvider = context.read<AuthProvider>();
+                  final threatProvider = context.read<ThreatProvider>();
+                  final l10n = AppLocalizations.of(context)!;
+                  
+                  final report = ThreatReport(
+                    sender: record.sender,
+                    message: record.message,
+                    timestamp: DateTime.now(),
+                    reportedBy: authProvider.user?.displayName ?? 'Anonymous User',
+                    riskLevel: record.riskLevel,
+                    location: 'India', // Simulated for threat map feel
+                  );
+
+                  try {
+                    await threatProvider.reportThreat(report);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.reportSubmitted),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Failed to submit report. Please check your connection.'),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                    }
+                  }
+                },
                 icon: const Icon(Icons.report_gmailerrorred_rounded, size: 20),
                 label: Text(l10n.reportToDatabase),
                 style: ElevatedButton.styleFrom(
