@@ -33,6 +33,15 @@
 *   **Real-time Alert Sync**: Detected threats are instantly pushed to the Guardian's dashboard over the local Wi-Fi.
 *   **Zero-Knowledge Transfers**: Only threat metadata (category, risk level, timestamp) is shared—raw private message content never leaves the member's device.
 
+### 🧓 Elderly Shield Mode (Accessibility)
+*   **High-Contrast Simplified UI**: A specialized dashboard stripped of complex telemetry, offering large typography, simplified warnings, and clear action buttons (Call Helpline/Ask Family).
+*   **Synchronized Voice Alerts**: Features a deeply integrated Text-To-Speech (`flutter_tts`) engine that automatically speaks incoming SMS safety verdicts out loud entirely without UI race-conditions.
+*   **Dynamic Language Synthesis**: Fully integrated with Flutter's `.arb` localizations. Switching the app to Hindi instantly translates the entire UI *and* sets the voice engine to synthesize native Hindi (`hi-IN`).
+
+### 🌐 Global Threat Reporting & Collaboration
+*   **Community Threat Pool**: Members can actively report verified scam messages and phone numbers to a centralized Firebase Cloud Firestore repository.
+*   **Threat Provider Syncing**: Pulls live global cyber-threat metrics, ensuring the local on-device intelligence is bolstered by real-world community reports.
+
 ### 📶 Bulletproof LAN Syncing
 *   **QR-Node Pairing**: Admin generates a dynamic QR containing their local IP and encrypted Family ID for instant pairing.
 *   **Automatic Handshake**: Includes multi-interface IP detection to ensure connectivity even behind restrictive routers or on emulators.
@@ -78,7 +87,10 @@ To demonstrate the real-time syncing between two devices (e.g., Admin and Member
 | **Local Server** | Shelf / Shelf Router | Lightweight HTTP node for Admin device |
 | **State** | Provider | Reactive UI updates across nodes |
 | **Scanning** | Mobile Scanner | QR detection for node-to-node pairing |
-| **Aesthetics** | Animate Do / Google Fonts | Premium "Cyber-Elite" visual system |
+| **Localization** | flutter_localizations | Dynamic dual-language (Hindi/English) .arb pipeline |
+| **Accessibility** | flutter_tts | Automatic text-to-speech for seniors |
+| **Cloud Sync** | cloud_firestore | Aggregating verified community threat reports |
+| **Aesthetics** | Animate Do / Google Fonts | Premium visual system |
 | **Network** | Network Info Plus | Dynamic IPv4 resolution for LAN |
 
 ---
