@@ -148,6 +148,44 @@ class FamilyAdminProvider extends ChangeNotifier {
         return Response.notFound('Member not found');
       });
 
+      // Member sends a help request
+      router.post('/help_request', (Request request) async {
+        final payload = await request.readAsString();
+        final data = json.decode(payload);
+        final String memberId = data['memberId'];
+        
+        final idx = _members.indexWhere((m) => m.id == memberId);
+        if (idx != -1) {
+          final member = _members[idx];
+          
+          final alert = AlertItem(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            category: 'Help Requested',
+            severity: RiskLevel.suspicious,
+            timestamp: DateTime.now(),
+          );
+          
+          final updatedAlerts = List<AlertItem>.from(member.recentAlerts)..insert(0, alert);
+          
+          _members[idx] = member.copyWith(
+            recentAlerts: updatedAlerts,
+            alertsCount: member.alertsCount + 1,
+            safetyStatus: RiskLevel.suspicious,
+            lastSync: DateTime.now(),
+          );
+          
+          await NotificationService.showNotification(
+            id: DateTime.now().millisecondsSinceEpoch % 100000,
+            title: '🚨 Family Help Request',
+            body: '${member.name} has requested immediate assistance!',
+          );
+          
+          notifyListeners();
+          return Response.ok(json.encode({'status': 'help_request_logged'}));
+        }
+        return Response.notFound('Member not found');
+      });
+
       final handler = Pipeline().addMiddleware(logRequests()).addHandler(router.call);
       
       _server = await io.serve(handler, '0.0.0.0', _port);

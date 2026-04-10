@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'core/routing/app_router.dart';
 import 'features/auth/providers/auth_provider.dart';
@@ -10,7 +11,9 @@ import 'features/family_shield/providers/family_member_provider.dart';
 import 'core/database/hive_service.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/services/notification_service.dart';
+import 'core/services/voice_service.dart';
 import 'core/localization/locale_provider.dart';
+import 'features/elderly_mode/providers/elderly_mode_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:suraksha_kavach/l10n/app_localizations.dart';
 
@@ -19,6 +22,7 @@ void main() async {
   await Firebase.initializeApp();
   await HiveService.init();
   await NotificationService.initialize();
+  await VoiceService.initialize();
   
   runApp(
     MultiProvider(
@@ -28,6 +32,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => FamilyAdminProvider()),
         ChangeNotifierProvider(create: (_) => FamilyMemberProvider()),
+        ChangeNotifierProvider(create: (_) => ElderlyModeProvider()),
         ChangeNotifierProvider(create: (_) => SmsHistoryProvider()),
         ChangeNotifierProxyProvider<SmsHistoryProvider, SmsStreamProvider>(
           create: (_) => SmsStreamProvider(),
@@ -39,20 +44,34 @@ void main() async {
   );
 }
 
-class SurakshaKavachApp extends StatelessWidget {
+class SurakshaKavachApp extends StatefulWidget {
   const SurakshaKavachApp({super.key});
+
+  @override
+  State<SurakshaKavachApp> createState() => _SurakshaKavachAppState();
+}
+
+class _SurakshaKavachAppState extends State<SurakshaKavachApp> {
+  late GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    // Router must be created once and stored — recreating it on every
+    // build() call causes Duplicate GlobalKey / Navigator conflicts.
+    _router = AppRouter.router(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
     final localeProvider = context.watch<LocaleProvider>();
-    final router = AppRouter.router(context);
 
     return MaterialApp.router(
       title: 'Suraksha Kavach',
       debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData,
-      routerConfig: router,
+      routerConfig: _router,
       locale: localeProvider.locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,

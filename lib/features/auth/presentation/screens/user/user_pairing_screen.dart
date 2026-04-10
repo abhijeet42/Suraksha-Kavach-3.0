@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,7 +38,20 @@ class _UserPairingScreenState extends State<UserPairingScreen> {
 
   Future<void> _processPayload(String rawValue) async {
     try {
-      final payload = QrPayload.fromJson(rawValue);
+      QrPayload payload;
+      
+      // Hardcoded bypass for testing purposes
+      if (rawValue.trim() == '123') {
+        payload = QrPayload(
+          familyId: 'FAM-TEST-123',
+          adminName: 'Test Admin',
+          ipAddress: '127.0.0.1',
+          port: 8080,
+        );
+      } else {
+        payload = QrPayload.fromJson(rawValue);
+      }
+      
       context.read<FamilyMemberProvider>().setPendingPayload(payload);
       
       if (context.mounted) {
@@ -78,9 +90,7 @@ class _UserPairingScreenState extends State<UserPairingScreen> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.familyPairing)),
-      body: FadeIn(
-        duration: const Duration(milliseconds: 600),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           child: Column(
             children: [
@@ -166,7 +176,6 @@ class _UserPairingScreenState extends State<UserPairingScreen> {
             ],
           ),
         ),
-      ),
     );
   }
 }

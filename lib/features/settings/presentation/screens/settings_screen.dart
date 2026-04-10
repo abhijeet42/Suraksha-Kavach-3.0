@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:suraksha_kavach/features/auth/providers/auth_provider.dart';
 import 'package:suraksha_kavach/core/theme/theme_provider.dart';
 import 'package:suraksha_kavach/core/theme/app_theme.dart';
 import 'package:suraksha_kavach/core/localization/locale_provider.dart';
 import 'package:suraksha_kavach/l10n/app_localizations.dart';
+import 'package:suraksha_kavach/features/elderly_mode/providers/elderly_mode_provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -82,12 +82,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
+    final elderlyProvider = context.watch<ElderlyModeProvider>();
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
-      body: FadeIn(
-        duration: const Duration(milliseconds: 600),
-        child: ListView(
-          children: [
+      body: ListView(
+        children: [
             // Profile Banner
           Container(
             padding: const EdgeInsets.all(24),
@@ -157,6 +157,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onChanged: (val) => setState(() => _voiceAlertsEnabled = val),
             secondary: const Icon(Icons.record_voice_over),
           ),
+          // Elderly / Senior Shield Mode — only shown to non-admin users
+          if (!authProvider.isAdmin)
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade900.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.blueAccent.withOpacity(0.4), width: 1.5),
+              ),
+              child: SwitchListTile(
+                title: const Text(
+                  'Senior Shield Mode',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                ),
+                subtitle: const Text(
+                  'Simplified interface with larger text & senior-friendly alerts',
+                  style: TextStyle(fontSize: 12),
+                ),
+                value: elderlyProvider.isElderlyMode,
+                onChanged: (val) {
+                  elderlyProvider.setElderlyMode(val);
+                  // Navigate to dashboard so user sees the change immediately
+                  context.go('/dashboard');
+                },
+                secondary: const Icon(Icons.elderly_rounded, color: Colors.blueAccent),
+              ),
+            ),
           ListTile(
             leading: const Icon(Icons.person),
             title: Text(l10n.editProfile),
@@ -186,9 +213,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 40),
         ],
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildThemeCard(BuildContext context, ThemeProvider provider, AppThemeType type, String name, Color color) {
     final isSelected = provider.currentTheme == type;

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../../data/models/risk_level.dart';
+import '../../../core/services/notification_service.dart';
 import '../models/qr_payload.dart';
 import '../models/alert_item.dart';
 
@@ -97,6 +98,31 @@ class FamilyMemberProvider extends ChangeNotifier {
       timestamp: DateTime.now(),
     );
     await sendAlertToAdmin(alert);
+  }
+
+  // Send explicit help request to admin
+  Future<void> sendHelpRequestToAdmin() async {
+    if (_connectedFamily != null) {
+      final url = Uri.parse('http://${_connectedFamily!.ipAddress}:${_connectedFamily!.port}/help_request');
+      try {
+        await http.post(
+          url,
+          body: json.encode({
+            'memberId': _memberId,
+          }),
+        );
+      } catch (e) {
+        if (kDebugMode) print('Failed to send help request to admin: $e');
+      }
+    }
+    
+    // For demo/hackathon purposes: we also trigger a local notification to show 
+    // it in action on the device itself.
+    await NotificationService.showNotification(
+      id: 999,
+      title: 'Help Request Sent',
+      body: 'We have notified your admin that you need help.',
+    );
   }
 
   void leaveFamily() {

@@ -14,6 +14,8 @@ import 'package:suraksha_kavach/features/family_shield/providers/family_admin_pr
 import 'package:suraksha_kavach/features/family_shield/providers/family_member_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:suraksha_kavach/l10n/app_localizations.dart';
+import 'package:suraksha_kavach/features/elderly_mode/providers/elderly_mode_provider.dart';
+import 'package:suraksha_kavach/features/elderly_mode/presentation/widgets/elderly_dashboard.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -272,6 +274,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
+    final elderlyProvider = context.watch<ElderlyModeProvider>();
     final smsProvider = context.watch<SmsStreamProvider>();
     final historyProvider = context.watch<SmsHistoryProvider>();
     final adminProvider = context.watch<FamilyAdminProvider>();
@@ -280,6 +283,8 @@ class DashboardScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     final userName = authProvider.isAdmin ? "Admin" : "Member";
+    // Show simplified elderly UI for non-admin users who have enabled it
+    final bool showElderly = elderlyProvider.isElderlyMode && !authProvider.isAdmin;
 
     return Scaffold(
       appBar: AppBar(
@@ -300,9 +305,9 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(width: 8),
         ],
       ),
-      body: FadeIn(
-        duration: const Duration(milliseconds: 600),
-        child: SingleChildScrollView(
+      body: showElderly
+          ? const ElderlyDashboard()
+          : SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -462,7 +467,6 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 
