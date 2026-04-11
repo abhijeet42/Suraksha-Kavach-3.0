@@ -5,6 +5,9 @@ import '../../engine_analysis/models/analysis_result.dart';
 import '../../engine_analysis/rule_based/rule_based_analyzer.dart';
 import '../../history/providers/sms_history_provider.dart';
 import '../../../data/models/saved_sms_record.dart';
+import '../../family_shield/providers/family_member_provider.dart';
+import '../../family_shield/models/alert_item.dart';
+import '../../../data/models/risk_level.dart';
 
 class SmsMessageData {
   final String sender;
@@ -31,6 +34,7 @@ class SmsStreamProvider extends ChangeNotifier {
   
   final SmsAnalyzer _analyzer = RuleBasedAnalyzer();
   SmsHistoryProvider? _historyProvider;
+  FamilyMemberProvider? _familyMemberProvider;
   
   SmsMessageData? _latestMessage;
   AnalysisResult? _latestAnalysis;
@@ -42,8 +46,9 @@ class SmsStreamProvider extends ChangeNotifier {
   bool get isListening => _isListening;
   bool get isAnalyzing => _isAnalyzing;
 
-  void updateHistoryProvider(SmsHistoryProvider provider) {
-    _historyProvider = provider;
+  void updateProviders(SmsHistoryProvider historyProvider, FamilyMemberProvider memberProvider) {
+    _historyProvider = historyProvider;
+    _familyMemberProvider = memberProvider;
   }
 
   void startListening() {
@@ -61,6 +66,17 @@ class SmsStreamProvider extends ChangeNotifier {
         
         // Output to Memory & UI
         notifyListeners();
+
+        // Autowire to admin if connected and NOT SAFE
+        if (_latestAnalysis!.level != RiskLevel.safe && _familyMemberProvider != null && _familyMemberProvider!.isConnected) {
+            final alert = AlertItem(
+              id: _latestMessage!.timestamp.toString(),
+              category: _latestAnalysis!.flagReasons.isNotEmpty ? _latestAnalysis!.flagReasons.first : 'Dangerous SMS Detected',
+              severity: _latestAnalysis!.level,
+              timestamp: DateTime.fromMillisecondsSinceEpoch(_latestMessage!.timestamp),
+            );
+            _familyMemberProvider!.sendAlertToAdmin(alert);
+        }
 
         // Save to Database (Hive)
         if (_historyProvider != null) {

@@ -68,6 +68,12 @@ To execute the application and witness the LAN mesh in real life, you will need 
 3. Once the handshake verifies, hit the **DEMO: SEND MOCK SCAM ALERT** button in the dashboard.
 4. **Watch the magic:** Device 1's Admin Cyber Score will drop in absolute real-time as the threat packet safely traverses your local airwaves!
 
+### 🧪 Important Testing Disclaimer: SMS vs. RCS
+Please note that if you are testing the app by sending texts from another modern Android phone, your device might be using **RCS (Rich Communication Services / Chat features)** instead of standard SMS.
+* The Android `SMS_RECEIVED` broadcast API strictly intercepts legacy cellular SMS traffic. It **cannot intercept RCS traffic** (messages sent over data/WiFi).
+* Because iOS currently defaults to traditional SMS when texting Android devices, texts sent from iPhones will trigger the app's detection completely seamlessly.
+* **To test detection from an Android device:** You must temporarily disable "RCS Chats" in your Android Messages settings to force the device to fallback to a traditional, interceptable SMS.
+
 ---
 
 ## 🛠️ Complete Technical Infrastructure

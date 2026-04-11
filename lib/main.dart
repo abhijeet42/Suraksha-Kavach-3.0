@@ -36,9 +36,12 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ElderlyModeProvider()),
         ChangeNotifierProvider(create: (_) => SmsHistoryProvider()),
         ChangeNotifierProvider(create: (_) => ThreatProvider()),
-        ChangeNotifierProxyProvider<SmsHistoryProvider, SmsStreamProvider>(
+        ChangeNotifierProxyProvider2<SmsHistoryProvider, FamilyMemberProvider, SmsStreamProvider>(
           create: (_) => SmsStreamProvider(),
-          update: (_, history, stream) => stream!..updateHistoryProvider(history),
+          update: (_, history, member, stream) {
+            stream!.updateProviders(history, member);
+            return stream;
+          },
         ),
       ],
       child: const SurakshaKavachApp(),

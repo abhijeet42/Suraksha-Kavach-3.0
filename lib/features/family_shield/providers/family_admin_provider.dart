@@ -130,6 +130,12 @@ class FamilyAdminProvider extends ChangeNotifier {
             lastSync: DateTime.now(),
           );
           
+          await NotificationService.showNotification(
+            id: DateTime.now().millisecondsSinceEpoch % 100000,
+            title: '🚨 Threat Detected on ${member.name}',
+            body: alert.category,
+          );
+          
           _checkHealthAndNotify();
           notifyListeners();
           return Response.ok(json.encode({'status': 'alert_logged'}));
